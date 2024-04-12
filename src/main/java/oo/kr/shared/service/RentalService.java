@@ -51,6 +51,8 @@ public class RentalService {
     RentalStation rentalStation = rentalStationRepository.findById(returnUmbrellaInfo.stationId())
                                                          .orElseThrow(RuntimeException::new);
     rentalRecord.returnUmbrella(rentalStation, returnUmbrellaInfo.returnTime());
+    rentalRecord.getUmbrella()
+                .returnToStation(rentalStation);
     rentalRecordRepository.save(rentalRecord);
   }
 

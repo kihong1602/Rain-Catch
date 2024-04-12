@@ -1,10 +1,13 @@
 package oo.kr.shared.domain.rentalstation;
 
 import jakarta.persistence.Entity;
-import java.util.Objects;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import oo.kr.shared.domain.umbrella.Umbrella;
 import oo.kr.shared.global.utils.BaseEntity;
 import oo.kr.shared.global.utils.GeometryUtil;
 import org.locationtech.jts.geom.Point;
@@ -16,22 +19,14 @@ public class RentalStation extends BaseEntity {
 
   private String name;
   private String address;
-  private Integer availableUmbrellas;
+  @OneToMany(mappedBy = "currentStation")
+  private List<Umbrella> availableUmbrellas = new ArrayList<>();
   private Point point;
 
-  public RentalStation(String name, String address, Integer availableUmbrellas, Double latitude, Double longitude) {
+  public RentalStation(String name, String address, Double latitude, Double longitude) {
     this.name = name;
     this.address = address;
-    this.availableUmbrellas = Objects.requireNonNullElse(availableUmbrellas, 0);
     this.point = GeometryUtil.createPoint(latitude, longitude);
-  }
-
-  public void increaseUmbrella() {
-    availableUmbrellas++;
-  }
-
-  public void decreaseUmbrella() {
-    availableUmbrellas--;
   }
 
 }
