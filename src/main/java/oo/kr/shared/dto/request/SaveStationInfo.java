@@ -10,6 +10,6 @@ public record SaveStationInfo(
 ) {
 
   public RentalStation toEntity() {
-    return new RentalStation(name, address, null, latitude, longitude);
+    return new RentalStation(name, address, latitude, longitude);
   }
 }

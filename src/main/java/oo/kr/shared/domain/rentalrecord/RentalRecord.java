@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import oo.kr.shared.domain.payment.Payment;
 import oo.kr.shared.domain.rentalstation.RentalStation;
 import oo.kr.shared.domain.umbrella.Umbrella;
-import oo.kr.shared.domain.umbrella.UmbrellaStatus;
 import oo.kr.shared.global.utils.BaseEntity;
 
 @Getter
@@ -63,7 +62,5 @@ public class RentalRecord extends BaseEntity {
     this.returnStation = returnStation;
     this.returnTime = returnTime;
     this.rentalStatus = RentalStatus.RETURN;
-    this.returnStation.increaseUmbrella();
-    this.umbrella.changeStatus(UmbrellaStatus.AVAILABLE);
   }
 }

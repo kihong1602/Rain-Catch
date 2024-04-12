@@ -9,7 +9,6 @@ import oo.kr.shared.domain.payment.PaymentRepository;
 import oo.kr.shared.domain.rentalrecord.RentalRecord;
 import oo.kr.shared.domain.rentalrecord.RentalRecordRepository;
 import oo.kr.shared.domain.rentalstation.RentalStation;
-import oo.kr.shared.domain.rentalstation.RentalStationRepository;
 import oo.kr.shared.domain.umbrella.Umbrella;
 import oo.kr.shared.domain.umbrella.UmbrellaRepository;
 import oo.kr.shared.domain.umbrella.UmbrellaStatus;
@@ -24,7 +23,6 @@ public class PaymentService {
   private final MemberRepository memberRepository;
   private final PaymentRepository paymentRepository;
   private final UmbrellaRepository umbrellaRepository;
-  private final RentalStationRepository rentalStationRepository;
   private final RentalRecordRepository rentalRecordRepository;
 
   @Transactional
@@ -33,8 +31,9 @@ public class PaymentService {
                                     .orElseThrow(RuntimeException::new);
     Payment payment = savePayment(paymentInfo, member);
     Payment savePayment = paymentRepository.save(payment);
-    RentalStation rentalStation = changeAvailableUmbrellasInStation(paymentInfo.stationId());
-    Umbrella umbrella = changeUmbrellaStatus(paymentInfo.umbrellaId());
+    Umbrella umbrella = umbrellaRepository.findById(paymentInfo.umbrellaId())
+                                          .orElseThrow(RuntimeException::new);
+    RentalStation rentalStation = rentUmbrella(umbrella);
     saveRentalRecord(savePayment.getCreateDate(), payment, umbrella, rentalStation);
   }
 
@@ -44,18 +43,12 @@ public class PaymentService {
     return paymentRepository.save(payment);
   }
 
-  private RentalStation changeAvailableUmbrellasInStation(Long rentalStationId) {
-    RentalStation rentalStation = rentalStationRepository.findByIdWithPessimisticLock(rentalStationId)
-                                                         .orElseThrow(RuntimeException::new);
-    rentalStation.decreaseUmbrella();
-    return rentalStationRepository.save(rentalStation);
-  }
-
-  private Umbrella changeUmbrellaStatus(Long umbrellaId) {
-    Umbrella umbrella = umbrellaRepository.findById(umbrellaId)
-                                          .orElseThrow(RuntimeException::new);
+  private RentalStation rentUmbrella(Umbrella umbrella) {
+    RentalStation rentalStation = umbrella.getCurrentStation();
     umbrella.changeStatus(UmbrellaStatus.RENTED);
-    return umbrella;
+    umbrella.rent();
+    umbrellaRepository.save(umbrella);
+    return rentalStation;
   }
 
   private void saveRentalRecord(LocalDateTime rentalTime, Payment payment, Umbrella umbrella,
