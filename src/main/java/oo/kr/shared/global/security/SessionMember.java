@@ -2,33 +2,15 @@ package oo.kr.shared.global.security;
 
 import oo.kr.shared.domain.member.Member;
 
-public class SessionMember {
+public record SessionMember(
+    Long id,
+    String email,
+    String nickName,
+    String image
+) {
 
-  private Long id;
-  private String email;
-  private String nickName;
-  private String image;
-
-  public SessionMember(Member member) {
-    this.id = member.getId();
-    this.email = member.getEmail();
-    this.nickName = member.getName();
-    this.image = member.getImage();
+  public static SessionMember create(Member member) {
+    return new SessionMember(member.getId(), member.getEmail(), member.getName(), member.getImage());
   }
 
-  public Long getId() {
-    return id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getNickName() {
-    return nickName;
-  }
-
-  public String getImage() {
-    return image;
-  }
 }

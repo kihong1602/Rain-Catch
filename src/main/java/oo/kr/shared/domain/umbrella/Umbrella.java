@@ -1,18 +1,20 @@
 package oo.kr.shared.domain.umbrella;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import oo.kr.shared.global.utils.BaseEntity;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Umbrella extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   private UmbrellaStatus umbrellaStatus;
-
-  protected Umbrella() {
-  }
 
   public void changeStatus(UmbrellaStatus status) {
     umbrellaStatus = status;

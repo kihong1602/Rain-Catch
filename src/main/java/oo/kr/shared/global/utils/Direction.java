@@ -1,5 +1,10 @@
 package oo.kr.shared.global.utils;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum Direction {
 
   NORTH(0.0),
@@ -12,13 +17,5 @@ public enum Direction {
   NORTHEAST(45.0);
 
   private final Double bearing;
-
-  Direction(Double bearing) {
-    this.bearing = bearing;
-  }
-
-  public Double getBearing() {
-    return bearing;
-  }
 
 }

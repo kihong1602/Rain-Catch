@@ -1,13 +1,18 @@
 package oo.kr.shared.domain.payment;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import oo.kr.shared.domain.member.Member;
 import oo.kr.shared.global.utils.BaseEntity;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Payment extends BaseEntity {
 
@@ -24,9 +29,6 @@ public class Payment extends BaseEntity {
   @JoinColumn(name = "member_id")
   private Member member;
 
-  protected Payment() {
-  }
-
   public Payment(String impUid, String merchantUid, Integer amount, Member member) {
     this.impUid = impUid;
     this.merchantUid = merchantUid;
@@ -34,23 +36,4 @@ public class Payment extends BaseEntity {
     this.member = member;
   }
 
-  public String getImpUid() {
-    return impUid;
-  }
-
-  public String getMerchantUid() {
-    return merchantUid;
-  }
-
-  public Integer getAmount() {
-    return amount;
-  }
-
-  public PaymentStatus getPaymentStatus() {
-    return paymentStatus;
-  }
-
-  public Member getMember() {
-    return member;
-  }
 }

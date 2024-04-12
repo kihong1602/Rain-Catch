@@ -1,5 +1,6 @@
 package oo.kr.shared.controller;
 
+import lombok.RequiredArgsConstructor;
 import oo.kr.shared.dto.request.SaveStationInfo;
 import oo.kr.shared.dto.response.NearRentalStation;
 import oo.kr.shared.global.utils.Location;
@@ -11,14 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 public class StationController {
 
   private final StationService stationService;
-
-  public StationController(StationService stationService) {
-    this.stationService = stationService;
-  }
 
   @GetMapping("/station/near")
   public ResponseEntity<NearRentalStation> nearStation(@ModelAttribute Location location) {

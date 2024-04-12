@@ -1,7 +1,9 @@
 package oo.kr.shared.domain.rentalrecord;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public enum RentalStatus {
 
   RENTED("대여중"),
@@ -9,10 +11,6 @@ public enum RentalStatus {
   OVERDUE("연체");
 
   private final String description;
-
-  RentalStatus(String description) {
-    this.description = description;
-  }
 
   @JsonValue
   public String getDescription() {

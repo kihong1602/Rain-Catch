@@ -1,5 +1,10 @@
 package oo.kr.shared.domain.umbrella;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum UmbrellaStatus {
   WAIT("대기중"),
   AVAILABLE("사용가능"),
@@ -8,13 +13,5 @@ public enum UmbrellaStatus {
   DAMAGED("파손");
 
   private final String description;
-
-  UmbrellaStatus(String description) {
-    this.description = description;
-  }
-
-  public String getDescription() {
-    return description;
-  }
 
 }

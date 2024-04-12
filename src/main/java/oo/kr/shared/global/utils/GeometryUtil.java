@@ -1,14 +1,13 @@
 package oo.kr.shared.global.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GeometryUtil {
-
-  private GeometryUtil() throws IllegalAccessException {
-    throw new IllegalAccessException(GeometryUtil.class.getName() + " is Utility Class");
-  }
 
   public static Point createPoint(double latitude, double longitude) {
     String pointFormat = String.format("POINT(%f %f)", latitude, longitude);

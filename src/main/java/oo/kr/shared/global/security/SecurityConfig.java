@@ -1,36 +1,32 @@
 package oo.kr.shared.global.security;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class SecurityConfig {
 
   private final CustomOAuth2UserService oAuth2UserService;
 
-  public SecurityConfig(CustomOAuth2UserService oAuth2UserService) {
-    this.oAuth2UserService = oAuth2UserService;
-  }
-
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.csrf()
-        .disable()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeRequests()
-        .anyRequest()
-        .permitAll()
-        .and()
-        .oauth2Login()
-        .loginPage("/login")
-        .userInfoEndpoint()
-        .userService(oAuth2UserService);
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
+            .anyRequest()
+            .permitAll())
+        .oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
+            .loginPage("/login")
+            .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                .userService(oAuth2UserService)))
+        .build();
   }
 
 }

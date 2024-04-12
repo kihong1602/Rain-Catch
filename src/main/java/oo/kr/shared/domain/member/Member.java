@@ -1,10 +1,15 @@
 package oo.kr.shared.domain.member;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import oo.kr.shared.global.utils.BaseEntity;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class Member extends BaseEntity {
 
@@ -15,34 +20,11 @@ public class Member extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private Role role = Role.USER;
 
-  protected Member() {
-  }
-
   public Member(String name, String email, String image, String providerType) {
     this.name = name;
     this.email = email;
     this.image = image;
     this.providerType = providerType;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getImage() {
-    return image;
-  }
-
-  public String getProviderType() {
-    return providerType;
-  }
-
-  public Role getRole() {
-    return role;
   }
 
   public String getRoleKey() {

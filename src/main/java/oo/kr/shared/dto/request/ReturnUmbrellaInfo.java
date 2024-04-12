@@ -7,21 +7,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import java.time.LocalDateTime;
 
-public class ReturnUmbrellaInfo {
 
-  @JsonProperty("station_id")
-  private Long stationId;
+public record ReturnUmbrellaInfo(
+    @JsonProperty("station_id")
+    Long stationId,
 
-  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-  @JsonProperty("return_time")
-  private LocalDateTime returnTime;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @JsonProperty("return_time")
+    LocalDateTime returnTime
+) {
 
-  public Long getStationId() {
-    return stationId;
-  }
-
-  public LocalDateTime getReturnTime() {
-    return returnTime;
-  }
 }

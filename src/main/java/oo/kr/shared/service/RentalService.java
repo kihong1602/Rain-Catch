@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.payment.Payment;
 import oo.kr.shared.domain.payment.PaymentRepository;
 import oo.kr.shared.domain.rentalrecord.RentalRecord;
@@ -17,19 +18,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class RentalService {
 
   private final RentalRecordRepository rentalRecordRepository;
   private final RentalStationRepository rentalStationRepository;
   private final PaymentRepository paymentRepository;
-
-  public RentalService(RentalRecordRepository rentalRecordRepository, RentalStationRepository rentalStationRepository,
-      PaymentRepository paymentRepository) {
-    this.rentalRecordRepository = rentalRecordRepository;
-    this.rentalStationRepository = rentalStationRepository;
-    this.paymentRepository = paymentRepository;
-  }
 
   @Transactional(readOnly = true)
   public OverDueCheck overdueCheck(Long memberId) {
@@ -45,7 +40,7 @@ public class RentalService {
       double chargePeriods = Math.ceil((double) minutesDiff / 10);
       additionalCharge = (long) chargePeriods * 100;
     }
-    return new OverDueCheck(minutesDiff, additionalCharge);
+    return OverDueCheck.create(minutesDiff, additionalCharge);
   }
 
   @Transactional
@@ -53,9 +48,9 @@ public class RentalService {
     Payment lastPayment = getLastPayment(memberId);
     RentalRecord rentalRecord = rentalRecordRepository.findByUmbrellaIdAndPaymentId(lastPayment.getId())
                                                       .orElseThrow(RuntimeException::new);
-    RentalStation rentalStation = rentalStationRepository.findById(returnUmbrellaInfo.getStationId())
+    RentalStation rentalStation = rentalStationRepository.findById(returnUmbrellaInfo.stationId())
                                                          .orElseThrow(RuntimeException::new);
-    rentalRecord.returnUmbrella(rentalStation, returnUmbrellaInfo.getReturnTime());
+    rentalRecord.returnUmbrella(rentalStation, returnUmbrellaInfo.returnTime());
     rentalRecordRepository.save(rentalRecord);
   }
 

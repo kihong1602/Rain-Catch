@@ -1,8 +1,8 @@
 package oo.kr.shared.domain.rentalstation;
 
+import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface RentalStationRepository extends JpaRepository<RentalStation, Long> {
 
   @Query(value = "select * from rental_station as r "
-      + "where MBRContains(ST_LINESTRINGFROMTEXT(:point),r.point)",
-      nativeQuery = true)
+      + "where MBRContains(ST_LINESTRINGFROMTEXT(:point),r.point)", nativeQuery = true)
   List<RentalStation> findNearDistance(@Param("point") String point);
 
   @Lock(value = LockModeType.PESSIMISTIC_WRITE)

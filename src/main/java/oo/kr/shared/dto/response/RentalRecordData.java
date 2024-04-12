@@ -6,171 +6,94 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.Optional;
 import oo.kr.shared.domain.payment.Payment;
 import oo.kr.shared.domain.payment.PaymentStatus;
 import oo.kr.shared.domain.rentalrecord.RentalRecord;
 import oo.kr.shared.domain.rentalrecord.RentalStatus;
 import oo.kr.shared.domain.rentalstation.RentalStation;
 
-public class RentalRecordData {
+public record RentalRecordData(
+    @JsonProperty("rental_record_info")
+    RentalRecordInfo rentalRecordInfo,
 
-  @JsonProperty("rental_record_info")
-  private RentalRecordInfo rentalRecordInfo;
+    @JsonProperty("payment_info")
+    PaymentInfo paymentInfo,
 
-  @JsonProperty("payment_info")
-  private PaymentInfo paymentInfo;
+    @JsonProperty("rental_station_info")
+    RentalStationInfo rentalStationInfo,
 
-  @JsonProperty("rental_station_info")
-  private RentalStationInfo rentalStationInfo;
-
-  @JsonProperty("return_station_info")
-  private RentalStationInfo returnStationInfo;
-
-
-  private RentalRecordData(RentalRecordInfo rentalRecordInfo, PaymentInfo paymentInfo,
-      RentalStationInfo rentalStationInfo,
-      RentalStationInfo returnStationInfo) {
-    this.rentalRecordInfo = rentalRecordInfo;
-    this.paymentInfo = paymentInfo;
-    this.rentalStationInfo = rentalStationInfo;
-    this.returnStationInfo = returnStationInfo;
-  }
+    @JsonProperty("return_station_info")
+    RentalStationInfo returnStationInfo
+) {
 
   public static RentalRecordData of(RentalRecord rentalRecord) {
-    Payment payment = rentalRecord.getPayment();
-    RentalRecordInfo rentalRecordInfo = new RentalRecordInfo(rentalRecord.getRentalTime(),
-        rentalRecord.getReturnTime(), rentalRecord.getExpectedReturnTime(), rentalRecord.getRentalStatus());
-    PaymentInfo paymentInfo = new PaymentInfo(payment.getMerchantUid(), payment.getAmount(), payment.getCreateDate(),
-        payment.getPaymentStatus());
-    RentalStation rentalStation = rentalRecord.getRentalStation();
-    RentalStationInfo rentalStationInfo = new RentalStationInfo(rentalStation.getId(), rentalStation.getName());
-    RentalStationInfo returnStationInfo = null;
-    RentalStation returnStation = rentalRecord.getReturnStation();
-    if (Objects.nonNull(returnStation)) {
-      returnStationInfo = new RentalStationInfo(returnStation.getId(), returnStation.getName());
-    }
+    RentalRecordInfo rentalRecordInfo = RentalRecordInfo.create(rentalRecord);
+    PaymentInfo paymentInfo = PaymentInfo.create(rentalRecord.getPayment());
+    RentalStationInfo rentalStationInfo = RentalStationInfo.create(rentalRecord.getRentalStation());
+    RentalStationInfo returnStationInfo = RentalStationInfo.create(rentalRecord.getReturnStation());
     return new RentalRecordData(rentalRecordInfo, paymentInfo, rentalStationInfo, returnStationInfo);
   }
 
-  public RentalRecordInfo getRentalRecordInfo() {
-    return rentalRecordInfo;
-  }
+  public record RentalRecordInfo(
+      @JsonSerialize(using = LocalDateTimeSerializer.class)
+      @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+      @JsonProperty("rental_time")
+      LocalDateTime rentalTime,
 
-  public PaymentInfo getPaymentInfo() {
-    return paymentInfo;
-  }
+      @JsonSerialize(using = LocalDateTimeSerializer.class)
+      @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+      @JsonProperty("return_time")
+      LocalDateTime returnTime,
 
-  public RentalStationInfo getRentalStationInfo() {
-    return rentalStationInfo;
-  }
+      @JsonSerialize(using = LocalDateTimeSerializer.class)
+      @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+      @JsonProperty("expected_return_time")
+      LocalDateTime expectedReturnTime,
 
-  public RentalStationInfo getReturnStationInfo() {
-    return returnStationInfo;
-  }
+      @JsonProperty("rental_status")
+      RentalStatus rentalStatus
+  ) {
 
-  public static class RentalRecordInfo {
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @JsonProperty("rental_time")
-    private LocalDateTime rentalTime;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @JsonProperty("return_time")
-    private LocalDateTime returnTime;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @JsonProperty("expected_return_time")
-    private LocalDateTime expectedReturnTime;
-
-    @JsonProperty("rental_status")
-    private RentalStatus rentalStatus;
-
-    public RentalRecordInfo(LocalDateTime rentalTime, LocalDateTime returnTime, LocalDateTime expectedReturnTime,
-        RentalStatus rentalStatus) {
-      this.rentalTime = rentalTime;
-      this.returnTime = returnTime;
-      this.expectedReturnTime = expectedReturnTime;
-      this.rentalStatus = rentalStatus;
-    }
-
-    public LocalDateTime getRentalTime() {
-      return rentalTime;
-    }
-
-    public LocalDateTime getReturnTime() {
-      return returnTime;
-    }
-
-    public LocalDateTime getExpectedReturnTime() {
-      return expectedReturnTime;
-    }
-
-    public RentalStatus getRentalStatus() {
-      return rentalStatus;
+    private static RentalRecordInfo create(RentalRecord rentalRecord) {
+      return new RentalRecordInfo(rentalRecord.getRentalTime(),
+          rentalRecord.getReturnTime(), rentalRecord.getExpectedReturnTime(), rentalRecord.getRentalStatus());
     }
   }
 
-  public static class PaymentInfo {
+  public record PaymentInfo(
+      @JsonProperty("merchant_uid")
+      String merchantUid,
 
-    @JsonProperty("merchant_uid")
-    private String merchantUid;
+      Integer amount,
 
-    private Integer amount;
+      @JsonSerialize(using = LocalDateTimeSerializer.class)
+      @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+      @JsonProperty("create_date")
+      LocalDateTime createDate,
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @JsonProperty("create_date")
-    private LocalDateTime createDate;
+      @JsonProperty("payment_status")
+      PaymentStatus paymentStatus
+  ) {
 
-    @JsonProperty("payment_status")
-    private PaymentStatus paymentStatus;
-
-    public PaymentInfo(String merchantUid, Integer amount, LocalDateTime createDate, PaymentStatus paymentStatus) {
-      this.merchantUid = merchantUid;
-      this.amount = amount;
-      this.createDate = createDate;
-      this.paymentStatus = paymentStatus;
-    }
-
-    public String getMerchantUid() {
-      return merchantUid;
-    }
-
-    public Integer getAmount() {
-      return amount;
-    }
-
-    public LocalDateTime getCreateDate() {
-      return createDate;
-    }
-
-    public PaymentStatus getPaymentStatus() {
-      return paymentStatus;
+    private static PaymentInfo create(Payment payment) {
+      return new PaymentInfo(payment.getMerchantUid(), payment.getAmount(), payment.getCreateDate(),
+          payment.getPaymentStatus());
     }
   }
 
-  public static class RentalStationInfo {
+  public record RentalStationInfo(
+      @JsonProperty("station_id")
+      Long stationId,
 
-    @JsonProperty("station_id")
-    private Long stationId;
+      String name
+  ) {
 
-    private String name;
 
-    public RentalStationInfo(Long stationId, String name) {
-      this.stationId = stationId;
-      this.name = name;
-    }
-
-    public Long getStationId() {
-      return stationId;
-    }
-
-    public String getName() {
-      return name;
+    private static RentalStationInfo create(RentalStation rentalStation) {
+      return Optional.ofNullable(rentalStation)
+                     .map(station -> new RentalStationInfo(station.getId(), station.getName()))
+                     .orElse(null);
     }
   }
 }
