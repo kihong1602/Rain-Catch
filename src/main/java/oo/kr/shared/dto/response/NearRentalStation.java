@@ -24,7 +24,8 @@ public record NearRentalStation(
 
     private static RentalStationData create(RentalStation rentalStation) {
       return new RentalStationData(rentalStation.getId(), rentalStation.getName(), rentalStation.getAddress(),
-          rentalStation.getAvailableUmbrellas());
+          rentalStation.getAvailableUmbrellas()
+                       .size());
     }
 
   }

@@ -6,7 +6,6 @@ spring:
     url: ${MYSQL_URL}
 
   jpa:
-    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
     hibernate:
       ddl-auto: create
 
