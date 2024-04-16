@@ -2,8 +2,6 @@ package oo.kr.shared.service;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.member.User;
-import oo.kr.shared.domain.member.UserRepository;
 import oo.kr.shared.domain.payment.Payment;
 import oo.kr.shared.domain.payment.PaymentRepository;
 import oo.kr.shared.domain.rentalrecord.RentalRecord;
@@ -12,6 +10,8 @@ import oo.kr.shared.domain.rentalstation.RentalStation;
 import oo.kr.shared.domain.umbrella.Umbrella;
 import oo.kr.shared.domain.umbrella.UmbrellaRepository;
 import oo.kr.shared.domain.umbrella.UmbrellaStatus;
+import oo.kr.shared.domain.user.User;
+import oo.kr.shared.domain.user.UserRepository;
 import oo.kr.shared.dto.request.RequiredPaymentInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

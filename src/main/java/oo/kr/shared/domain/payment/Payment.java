@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import oo.kr.shared.domain.member.User;
+import oo.kr.shared.domain.user.User;
 import oo.kr.shared.global.utils.BaseEntity;
 
 @Getter

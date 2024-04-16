@@ -1,4 +1,4 @@
-package oo.kr.shared.domain.member;
+package oo.kr.shared.domain.user;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

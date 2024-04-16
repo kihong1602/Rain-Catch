@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
+import oo.kr.shared.global.security.handler.SecurityLoginSuccessHandler;
 import oo.kr.shared.global.utils.JsonUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -15,8 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+@Component
 public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
   private static final String JSON_FORM_LOGIN_URL = "/api/accounts/login";
@@ -25,8 +28,10 @@ public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
   private final JsonUtils jsonUtils;
 
-  public JsonAuthenticationFilter(JsonUtils jsonUtils, AuthenticationManager authenticationManager) {
+  public JsonAuthenticationFilter(JsonUtils jsonUtils, AuthenticationManager authenticationManager,
+      SecurityLoginSuccessHandler securityLoginSuccessHandler) {
     super(JSON_FORM_LOGIN_REQUEST_MATCHER, authenticationManager);
+    setAuthenticationSuccessHandler(securityLoginSuccessHandler);
     this.jsonUtils = jsonUtils;
   }
 

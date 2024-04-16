@@ -1,4 +1,4 @@
-package oo.kr.shared.domain.member;
+package oo.kr.shared.domain.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

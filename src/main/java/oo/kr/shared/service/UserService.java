@@ -1,10 +1,10 @@
 package oo.kr.shared.service;
 
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.member.User;
-import oo.kr.shared.domain.member.UserRepository;
 import oo.kr.shared.domain.rentalrecord.RentalRecord;
 import oo.kr.shared.domain.rentalrecord.RentalRecordRepository;
+import oo.kr.shared.domain.user.User;
+import oo.kr.shared.domain.user.UserRepository;
 import oo.kr.shared.dto.request.SignupInfo;
 import oo.kr.shared.dto.response.RentalRecordData;
 import org.springframework.data.domain.Page;

@@ -2,8 +2,8 @@ package oo.kr.shared.global.security.auth;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.member.User;
-import oo.kr.shared.domain.member.UserRepository;
+import oo.kr.shared.domain.user.User;
+import oo.kr.shared.domain.user.UserRepository;
 import oo.kr.shared.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

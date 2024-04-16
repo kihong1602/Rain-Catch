@@ -1,4 +1,4 @@
-package oo.kr.shared.domain.member;
+package oo.kr.shared.domain.user;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,7 +17,8 @@ public class User extends BaseEntity {
   private String password;
   private String email;
   private String image;
-  private String providerType;
+  @Enumerated(EnumType.STRING)
+  private ProviderType providerType = ProviderType.LOCAL;
   @Enumerated(EnumType.STRING)
   private Role role = Role.USER;
 
@@ -31,7 +32,7 @@ public class User extends BaseEntity {
     this.nickName = nickName;
     this.email = email;
     this.image = image;
-    this.providerType = providerType;
+    this.providerType = ProviderType.find(providerType);
   }
 
   public String getRoleKey() {

@@ -53,7 +53,7 @@ public class SecurityConfig {
     http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
             .userService(oAuth2UserService))
-        .successHandler(handlerConfig.getOAuth2LoginSuccessHandler()));
+        .successHandler(handlerConfig.getLoginSuccessHandler()));
 
     http.logout(logoutConfigurer -> logoutConfigurer
         .logoutUrl("/api/accounts/logout")
