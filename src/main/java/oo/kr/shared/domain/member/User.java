@@ -11,17 +11,24 @@ import oo.kr.shared.global.utils.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Member extends BaseEntity {
+public class User extends BaseEntity {
 
-  private String name;
+  private String nickName;
+  private String password;
   private String email;
   private String image;
   private String providerType;
   @Enumerated(EnumType.STRING)
   private Role role = Role.USER;
 
-  public Member(String name, String email, String image, String providerType) {
-    this.name = name;
+  public User(String email, String password) {
+    this.nickName = email;
+    this.email = email;
+    this.password = password;
+  }
+
+  public User(String nickName, String email, String image, String providerType) {
+    this.nickName = nickName;
     this.email = email;
     this.image = image;
     this.providerType = providerType;

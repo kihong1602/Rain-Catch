@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import oo.kr.shared.global.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class SecurityAccessDeniedHandler implements AccessDeniedHandler {
       AccessDeniedException accessDeniedException) throws IOException, ServletException {
     response.setStatus(HttpStatus.FORBIDDEN.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
     objectMapper.writeValue(response.getWriter(), ErrorResponse.create(HttpStatus.FORBIDDEN, "권한이 부족합니다."));
   }
 }

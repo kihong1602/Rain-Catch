@@ -19,7 +19,7 @@ public interface RentalRecordRepository extends JpaRepository<RentalRecord, Long
           + "join fetch rr.payment "
           + "join fetch rr.rentalStation "
           + "left join fetch rr.returnStation "
-          + "where rr.payment.member.id = :memberId",
-      countQuery = "select count(rr) from RentalRecord rr join rr.payment p where p.member.id = :memberId")
-  Page<RentalRecord> findListByMemberId(@Param("memberId") Long memberId, Pageable pageable);
+          + "where rr.payment.user.id = :userId",
+      countQuery = "select count(rr) from RentalRecord rr join rr.payment p where p.user.id = :userId")
+  Page<RentalRecord> findListByUserId(@Param("userId") Long userId, Pageable pageable);
 }

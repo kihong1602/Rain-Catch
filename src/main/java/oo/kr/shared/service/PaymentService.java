@@ -2,8 +2,8 @@ package oo.kr.shared.service;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.member.Member;
-import oo.kr.shared.domain.member.MemberRepository;
+import oo.kr.shared.domain.member.User;
+import oo.kr.shared.domain.member.UserRepository;
 import oo.kr.shared.domain.payment.Payment;
 import oo.kr.shared.domain.payment.PaymentRepository;
 import oo.kr.shared.domain.rentalrecord.RentalRecord;
@@ -20,16 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PaymentService {
 
-  private final MemberRepository memberRepository;
+  private final UserRepository userRepository;
   private final PaymentRepository paymentRepository;
   private final UmbrellaRepository umbrellaRepository;
   private final RentalRecordRepository rentalRecordRepository;
 
   @Transactional
-  public void completedPayment(RequiredPaymentInfo paymentInfo, Long memberId) {
-    Member member = memberRepository.findById(memberId)
-                                    .orElseThrow(RuntimeException::new);
-    Payment payment = savePayment(paymentInfo, member);
+  public void completedPayment(RequiredPaymentInfo paymentInfo, String email) {
+    User user = userRepository.findByEmail(email)
+                              .orElseThrow(RuntimeException::new);
+    Payment payment = savePayment(paymentInfo, user);
     Payment savePayment = paymentRepository.save(payment);
     Umbrella umbrella = umbrellaRepository.findById(paymentInfo.umbrellaId())
                                           .orElseThrow(RuntimeException::new);
@@ -37,9 +37,9 @@ public class PaymentService {
     saveRentalRecord(savePayment.getCreateDate(), payment, umbrella, rentalStation);
   }
 
-  private Payment savePayment(RequiredPaymentInfo paymentInfo, Member member) {
+  private Payment savePayment(RequiredPaymentInfo paymentInfo, User user) {
     Payment payment = new Payment(paymentInfo.impUid(), paymentInfo.merchantUid(), paymentInfo.amount(),
-        member);
+        user);
     return paymentRepository.save(payment);
   }
 

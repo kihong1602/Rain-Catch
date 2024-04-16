@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import oo.kr.shared.domain.member.Member;
+import oo.kr.shared.domain.member.User;
 import oo.kr.shared.global.utils.BaseEntity;
 
 @Getter
@@ -27,13 +27,13 @@ public class Payment extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "member_id")
-  private Member member;
+  private User user;
 
-  public Payment(String impUid, String merchantUid, Integer amount, Member member) {
+  public Payment(String impUid, String merchantUid, Integer amount, User user) {
     this.impUid = impUid;
     this.merchantUid = merchantUid;
     this.amount = amount;
-    this.member = member;
+    this.user = user;
   }
 
 }

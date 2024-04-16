@@ -56,6 +56,8 @@ public class SecurityConfig {
         .successHandler(handlerConfig.getOAuth2LoginSuccessHandler()));
 
     http.logout(logoutConfigurer -> logoutConfigurer
+        .logoutUrl("/api/accounts/logout")
+        .addLogoutHandler(handlerConfig.getLogoutHandler())
         .logoutSuccessHandler(handlerConfig.getLogoutSuccessHandler()));
 
     http.addFilterBefore(filterConfig.getJsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

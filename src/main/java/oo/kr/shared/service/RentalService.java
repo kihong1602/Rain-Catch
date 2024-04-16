@@ -27,8 +27,8 @@ public class RentalService {
   private final PaymentRepository paymentRepository;
 
   @Transactional(readOnly = true)
-  public OverDueCheck overdueCheck(Long memberId) {
-    Payment lastPayment = getLastPayment(memberId);
+  public OverDueCheck overdueCheck(String email) {
+    Payment lastPayment = getLastPayment(email);
     RentalRecord rentalRecord = rentalRecordRepository.findByUmbrellaIdAndPaymentId(lastPayment.getId())
                                                       .orElseThrow(RuntimeException::new);
     LocalDateTime expectedReturnTime = rentalRecord.getExpectedReturnTime();
@@ -44,8 +44,8 @@ public class RentalService {
   }
 
   @Transactional
-  public void returnUmbrella(ReturnUmbrellaInfo returnUmbrellaInfo, Long memberId) {
-    Payment lastPayment = getLastPayment(memberId);
+  public void returnUmbrella(ReturnUmbrellaInfo returnUmbrellaInfo, String email) {
+    Payment lastPayment = getLastPayment(email);
     RentalRecord rentalRecord = rentalRecordRepository.findByUmbrellaIdAndPaymentId(lastPayment.getId())
                                                       .orElseThrow(RuntimeException::new);
     RentalStation rentalStation = rentalStationRepository.findById(returnUmbrellaInfo.stationId())
@@ -56,9 +56,9 @@ public class RentalService {
     rentalRecordRepository.save(rentalRecord);
   }
 
-  private Payment getLastPayment(Long memberId) {
+  private Payment getLastPayment(String email) {
     Pageable pageable = PageRequest.of(0, 1);
-    List<Payment> payments = paymentRepository.findByMemberId(memberId, pageable);
+    List<Payment> payments = paymentRepository.findByMemberId(email, pageable);
     return Objects.requireNonNull(payments.get(0));
   }
 
