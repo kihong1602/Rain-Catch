@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.user.ProviderType;
+import oo.kr.shared.domain.user.domain.ProviderType;
 import oo.kr.shared.global.security.auth.PrincipalDetails;
 import oo.kr.shared.global.security.auth.SecurityUserInfo;
 import oo.kr.shared.global.security.jwt.GeneratedToken;

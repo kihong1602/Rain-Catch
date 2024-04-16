@@ -1,7 +1,7 @@
 package oo.kr.shared.global.security.auth;
 
-import oo.kr.shared.domain.user.ProviderType;
-import oo.kr.shared.domain.user.User;
+import oo.kr.shared.domain.user.domain.ProviderType;
+import oo.kr.shared.domain.user.domain.User;
 
 public record SecurityUserInfo(
     Long id,

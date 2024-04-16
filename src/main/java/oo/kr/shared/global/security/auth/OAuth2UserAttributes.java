@@ -1,7 +1,7 @@
 package oo.kr.shared.global.security.auth;
 
 import java.util.Map;
-import oo.kr.shared.domain.user.User;
+import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
 
 public record OAuth2UserAttributes(

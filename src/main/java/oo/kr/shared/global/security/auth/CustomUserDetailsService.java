@@ -1,8 +1,8 @@
 package oo.kr.shared.global.security.auth;
 
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.user.User;
-import oo.kr.shared.domain.user.UserRepository;
+import oo.kr.shared.domain.user.domain.User;
+import oo.kr.shared.domain.user.domain.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
