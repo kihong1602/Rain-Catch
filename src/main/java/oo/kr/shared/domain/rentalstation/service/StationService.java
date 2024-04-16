@@ -6,9 +6,9 @@ import oo.kr.shared.domain.rentalstation.controller.request.SaveStationInfo;
 import oo.kr.shared.domain.rentalstation.controller.response.NearRentalStation;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
 import oo.kr.shared.domain.rentalstation.domain.repository.RentalStationRepository;
-import oo.kr.shared.global.utils.Direction;
+import oo.kr.shared.global.type.Direction;
+import oo.kr.shared.global.type.Location;
 import oo.kr.shared.global.utils.GeometryUtil;
-import oo.kr.shared.global.utils.Location;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor

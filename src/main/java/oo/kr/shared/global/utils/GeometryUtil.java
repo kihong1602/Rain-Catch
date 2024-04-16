@@ -2,6 +2,7 @@ package oo.kr.shared.global.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import oo.kr.shared.global.type.Location;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;

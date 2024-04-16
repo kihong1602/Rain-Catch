@@ -1,4 +1,4 @@
-package oo.kr.shared.global.utils;
+package oo.kr.shared.global.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

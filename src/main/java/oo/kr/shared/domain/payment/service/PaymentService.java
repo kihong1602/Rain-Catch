@@ -13,6 +13,8 @@ import oo.kr.shared.domain.umbrella.domain.UmbrellaStatus;
 import oo.kr.shared.domain.umbrella.domain.repository.UmbrellaRepository;
 import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.domain.user.domain.repository.UserRepository;
+import oo.kr.shared.global.exception.type.entity.EntityNotFoundException;
+import oo.kr.shared.global.security.auth.SecurityUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,20 +28,19 @@ public class PaymentService {
   private final RentalRecordRepository rentalRecordRepository;
 
   @Transactional
-  public void completedPayment(RequiredPaymentInfo paymentInfo, String email) {
-    User user = userRepository.findByEmail(email)
-                              .orElseThrow(RuntimeException::new);
+  public void completedPayment(RequiredPaymentInfo paymentInfo, SecurityUserInfo userInfo) {
+    User user = userRepository.findById(userInfo.id())
+                              .orElseThrow(EntityNotFoundException::new);
     Payment payment = savePayment(paymentInfo, user);
     Payment savePayment = paymentRepository.save(payment);
     Umbrella umbrella = umbrellaRepository.findById(paymentInfo.umbrellaId())
-                                          .orElseThrow(RuntimeException::new);
+                                          .orElseThrow(EntityNotFoundException::new);
     RentalStation rentalStation = rentUmbrella(umbrella);
     saveRentalRecord(savePayment.getCreateDate(), payment, umbrella, rentalStation);
   }
 
   private Payment savePayment(RequiredPaymentInfo paymentInfo, User user) {
-    Payment payment = new Payment(paymentInfo.impUid(), paymentInfo.merchantUid(), paymentInfo.amount(),
-        user);
+    Payment payment = new Payment(paymentInfo.impUid(), paymentInfo.merchantUid(), paymentInfo.amount(), user);
     return paymentRepository.save(payment);
   }
 

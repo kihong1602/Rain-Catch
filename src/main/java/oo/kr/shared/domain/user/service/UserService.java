@@ -8,10 +8,12 @@ import oo.kr.shared.domain.user.controller.response.DuplicateEmailResult;
 import oo.kr.shared.domain.user.controller.response.RentalRecordData;
 import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.domain.user.domain.repository.UserRepository;
+import oo.kr.shared.global.security.auth.SecurityUserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -21,18 +23,19 @@ public class UserService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  public Page<RentalRecordData> viewRentalRecord(String email, Pageable pageable) {
-    User user = userRepository.findByEmail(email)
-                              .orElseThrow(RuntimeException::new);
-    Page<RentalRecord> rentalRecords = rentalRecordRepository.findListByUserId(user.getId(), pageable);
+  @Transactional
+  public Page<RentalRecordData> viewRentalRecord(SecurityUserInfo userInfo, Pageable pageable) {
+    Page<RentalRecord> rentalRecords = rentalRecordRepository.findListByUserId(userInfo.id(), pageable);
     return rentalRecords.map(RentalRecordData::of);
   }
 
+  @Transactional
   public DuplicateEmailResult duplicateCheck(String email) {
     return new DuplicateEmailResult(userRepository.findByEmail(email)
                                                   .isEmpty());
   }
 
+  @Transactional
   public void register(SignupInfo signupInfo) {
     String email = signupInfo.email();
     String password = encodingPassword(signupInfo.password());

@@ -1,4 +1,4 @@
-package oo.kr.shared.global.utils;
+package oo.kr.shared.global.type;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

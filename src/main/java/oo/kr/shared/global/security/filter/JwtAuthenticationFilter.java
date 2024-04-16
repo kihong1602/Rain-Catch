@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.global.security.jwt.ExpiredJwtException;
-import oo.kr.shared.global.security.jwt.InvalidJwtException;
+import oo.kr.shared.global.exception.type.jwt.InvalidJwtException;
 import oo.kr.shared.global.security.jwt.JwtProvider;
 import oo.kr.shared.global.security.jwt.JwtResultType;
 import org.springframework.http.HttpHeaders;
@@ -49,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           refreshAccessToken(token, response);
           filterChain.doFilter(request, response);
         }
-        case INVALID_JWT -> throw new InvalidJwtException("잘못된 형식의 JWT입니다.");
+        case INVALID_JWT -> throw new InvalidJwtException();
       }
     }
   }
@@ -66,12 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void refreshAccessToken(String token, HttpServletResponse response) {
-    try {
-      String accessToken = jwtProvider.refreshAccessToken(token);
-      response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
-      saveAuthentication(accessToken);
-    } catch (RuntimeException e) {
-      throw new ExpiredJwtException("액세스 토큰이 만료되었으며, 유효한 리프레시 토큰이 없습니다.");
-    }
+    String accessToken = jwtProvider.refreshAccessToken(token);
+    response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
+    saveAuthentication(accessToken);
   }
 }

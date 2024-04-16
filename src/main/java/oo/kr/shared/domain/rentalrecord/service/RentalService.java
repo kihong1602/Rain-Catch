@@ -13,6 +13,8 @@ import oo.kr.shared.domain.rentalrecord.domain.RentalRecord;
 import oo.kr.shared.domain.rentalrecord.domain.repository.RentalRecordRepository;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
 import oo.kr.shared.domain.rentalstation.domain.repository.RentalStationRepository;
+import oo.kr.shared.global.exception.type.entity.EntityNotFoundException;
+import oo.kr.shared.global.security.auth.SecurityUserInfo;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,10 +29,8 @@ public class RentalService {
   private final PaymentRepository paymentRepository;
 
   @Transactional(readOnly = true)
-  public OverDueCheck overdueCheck(String email) {
-    Payment lastPayment = getLastPayment(email);
-    RentalRecord rentalRecord = rentalRecordRepository.findByUmbrellaIdAndPaymentId(lastPayment.getId())
-                                                      .orElseThrow(RuntimeException::new);
+  public OverDueCheck overdueCheck(SecurityUserInfo userInfo) {
+    RentalRecord rentalRecord = getRentalRecord(userInfo);
     LocalDateTime expectedReturnTime = rentalRecord.getExpectedReturnTime();
     LocalDateTime now = LocalDateTime.now();
     long minutesDiff = Duration.between(expectedReturnTime, now)
@@ -44,22 +44,25 @@ public class RentalService {
   }
 
   @Transactional
-  public void returnUmbrella(ReturnUmbrellaInfo returnUmbrellaInfo, String email) {
-    Payment lastPayment = getLastPayment(email);
-    RentalRecord rentalRecord = rentalRecordRepository.findByUmbrellaIdAndPaymentId(lastPayment.getId())
-                                                      .orElseThrow(RuntimeException::new);
+  public void returnUmbrella(ReturnUmbrellaInfo returnUmbrellaInfo, SecurityUserInfo userInfo) {
+    RentalRecord rentalRecord = getRentalRecord(userInfo);
     RentalStation rentalStation = rentalStationRepository.findById(returnUmbrellaInfo.stationId())
-                                                         .orElseThrow(RuntimeException::new);
+                                                         .orElseThrow(EntityNotFoundException::new);
     rentalRecord.returnUmbrella(rentalStation, returnUmbrellaInfo.returnTime());
     rentalRecord.getUmbrella()
                 .returnToStation(rentalStation);
     rentalRecordRepository.save(rentalRecord);
   }
 
-  private Payment getLastPayment(String email) {
+  private Payment getLastPayment(Long id) {
     Pageable pageable = PageRequest.of(0, 1);
-    List<Payment> payments = paymentRepository.findByMemberId(email, pageable);
+    List<Payment> payments = paymentRepository.findByUserId(id, pageable);
     return Objects.requireNonNull(payments.get(0));
   }
 
+  private RentalRecord getRentalRecord(SecurityUserInfo userInfo) {
+    Payment lastPayment = getLastPayment(userInfo.id());
+    return rentalRecordRepository.findByUmbrellaIdAndPaymentId(lastPayment.getId())
+                                 .orElseThrow(EntityNotFoundException::new);
+  }
 }

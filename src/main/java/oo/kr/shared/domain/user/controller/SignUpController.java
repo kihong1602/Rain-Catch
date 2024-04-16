@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.user.controller.request.SignupInfo;
 import oo.kr.shared.domain.user.controller.response.DuplicateEmailResult;
 import oo.kr.shared.domain.user.service.UserService;
+import oo.kr.shared.global.type.ResponseType;
+import oo.kr.shared.global.type.SimpleResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +28,8 @@ public class SignUpController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<?> register(@RequestBody SignupInfo signupInfo) {
+  public ResponseEntity<SimpleResponse> register(@RequestBody SignupInfo signupInfo) {
     userService.register(signupInfo);
-    return ResponseEntity.ok("SUCCESS");
+    return ResponseEntity.ok(new SimpleResponse(ResponseType.SUCCESS));
   }
 }
