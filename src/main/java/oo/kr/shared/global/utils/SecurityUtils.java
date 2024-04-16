@@ -1,20 +1,17 @@
 package oo.kr.shared.global.utils;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import oo.kr.shared.global.security.auth.PrincipalDetails;
-import oo.kr.shared.global.security.auth.SecurityUserInfo;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtils {
 
-  public static SecurityUserInfo getSecurityUserInfo() {
+  public static String getAuthenticationPrincipal() {
     Authentication authentication = SecurityContextHolder.getContext()
                                                          .getAuthentication();
-    PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-    return principal.getSecurityUserInfo();
+    return (String) authentication.getPrincipal();
   }
 
 }

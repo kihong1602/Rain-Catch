@@ -33,7 +33,7 @@ public class JwtProvider {
   private Key key;
 
   public static String getJwt(String bearerToken) {
-    final String TOKEN_PREFIX = "bearer ";
+    final String TOKEN_PREFIX = "Bearer ";
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
       return bearerToken.replace(TOKEN_PREFIX, "");
     }

@@ -8,7 +8,7 @@ import oo.kr.shared.domain.user.controller.response.DuplicateEmailResult;
 import oo.kr.shared.domain.user.controller.response.RentalRecordData;
 import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.domain.user.domain.repository.UserRepository;
-import oo.kr.shared.global.security.auth.SecurityUserInfo;
+import oo.kr.shared.global.exception.type.entity.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,8 +24,10 @@ public class UserService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Transactional
-  public Page<RentalRecordData> viewRentalRecord(SecurityUserInfo userInfo, Pageable pageable) {
-    Page<RentalRecord> rentalRecords = rentalRecordRepository.findListByUserId(userInfo.id(), pageable);
+  public Page<RentalRecordData> viewRentalRecord(String email, Pageable pageable) {
+    User user = userRepository.findByEmail(email)
+                              .orElseThrow(EntityNotFoundException::new);
+    Page<RentalRecord> rentalRecords = rentalRecordRepository.findListByUserId(user.getId(), pageable);
     return rentalRecords.map(RentalRecordData::of);
   }
 

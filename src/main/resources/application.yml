@@ -26,6 +26,7 @@ spring:
           useUnicode: true
           CharSet: utf-8
     defer-datasource-initialization: true
+    open-in-view: false
 
   sql:
     init:
@@ -62,3 +63,6 @@ spring:
             user-name-attribute: id
 jwt:
   secret: ${JWT_SECRET}
+#logging:
+#  level:
+#    org.springframework.security: trace

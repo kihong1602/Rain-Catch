@@ -1,7 +1,7 @@
 package oo.kr.shared.global.exception.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.http.HttpStatus;
 
 @Getter

@@ -1,5 +1,8 @@
 package oo.kr.shared.global.type;
 
+import lombok.Getter;
+
+@Getter
 public abstract class ResponseDto {
 
   private ResponseType result;

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.rentalrecord.controller.request.ReturnUmbrellaInfo;
 import oo.kr.shared.domain.rentalrecord.controller.response.OverDueCheck;
 import oo.kr.shared.domain.rentalrecord.service.RentalService;
-import oo.kr.shared.global.security.auth.SecurityUserInfo;
 import oo.kr.shared.global.security.jwt.JwtProvider;
 import oo.kr.shared.global.type.ResponseType;
 import oo.kr.shared.global.type.SimpleResponse;
@@ -24,15 +23,15 @@ public class RentalController {
 
   @GetMapping("/rental/umbrella/overdue")
   public ResponseEntity<OverDueCheck> returnTimeCheck() {
-    SecurityUserInfo securityUserInfo = SecurityUtils.getSecurityUserInfo();
-    OverDueCheck overDueCheck = rentalService.overdueCheck(securityUserInfo);
+    String email = SecurityUtils.getAuthenticationPrincipal();
+    OverDueCheck overDueCheck = rentalService.overdueCheck(email);
     return ResponseEntity.ok(overDueCheck);
   }
 
   @PutMapping("/rental/umbrella/return")
   public ResponseEntity<SimpleResponse> returnUmbrella(@RequestBody ReturnUmbrellaInfo returnUmbrellaInfo) {
-    SecurityUserInfo securityUserInfo = SecurityUtils.getSecurityUserInfo();
-    rentalService.returnUmbrella(returnUmbrellaInfo, securityUserInfo);
+    String email = SecurityUtils.getAuthenticationPrincipal();
+    rentalService.returnUmbrella(returnUmbrellaInfo, email);
     return ResponseEntity.ok(new SimpleResponse(ResponseType.SUCCESS));
   }
 }
