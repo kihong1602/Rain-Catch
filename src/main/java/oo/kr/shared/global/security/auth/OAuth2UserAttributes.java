@@ -1,14 +1,14 @@
-package oo.kr.shared.global.security;
+package oo.kr.shared.global.security.auth;
 
 import java.util.Map;
-import oo.kr.shared.domain.member.Member;
-import oo.kr.shared.global.security.OAuth2ProviderRegistry.OAuth2ProviderType;
+import oo.kr.shared.domain.member.User;
+import oo.kr.shared.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
 
 public record OAuth2UserAttributes(
     Map<String, Object> attributes,
     String nameAttributeKey,
     String providerType,
-    String name,
+    String nickName,
     String email,
     String image
 ) {
@@ -40,7 +40,7 @@ public record OAuth2UserAttributes(
     );
   }
 
-  public Member toMember() {
-    return new Member(name, email, image, providerType);
+  public User toUser() {
+    return new User(nickName, email, image, providerType);
   }
 }

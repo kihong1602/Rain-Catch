@@ -1,4 +1,4 @@
-package oo.kr.shared.global.security;
+package oo.kr.shared.global.security.auth;
 
 import java.util.HashSet;
 import java.util.List;

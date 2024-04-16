@@ -1,11 +1,10 @@
-package oo.kr.shared.global.security;
+package oo.kr.shared.global.security.auth;
 
-import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.member.Member;
-import oo.kr.shared.domain.member.MemberRepository;
-import oo.kr.shared.global.security.OAuth2ProviderRegistry.OAuth2ProviderType;
+import oo.kr.shared.domain.member.User;
+import oo.kr.shared.domain.member.UserRepository;
+import oo.kr.shared.global.security.auth.OAuth2ProviderRegistry.OAuth2ProviderType;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -17,8 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-  private final MemberRepository memberRepository;
-  private final HttpSession httpSession;
+  private final UserRepository userRepository;
 
   @Override
   public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -35,15 +33,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     OAuth2UserAttributes oAuth2UserAttributes = OAuth2UserAttributes.of(providerType, userNameAttributeName,
         oAuth2UserResponse);
 
-    Member member = save(oAuth2UserAttributes);
-    httpSession.setAttribute("user", SessionMember.create(member));
-    return CustomOAuth2User.create(member, oAuth2UserResponse);
+    User user = save(oAuth2UserAttributes);
+    return PrincipalDetails.create(user, oAuth2UserResponse);
   }
 
-  private Member save(OAuth2UserAttributes oAuth2UserAttributes) {
-    Member member = memberRepository.findByEmail(oAuth2UserAttributes.email())
-                                    .orElse(oAuth2UserAttributes.toMember());
-    return memberRepository.save(member);
+  private User save(OAuth2UserAttributes oAuth2UserAttributes) {
+    User user = userRepository.findByEmail(oAuth2UserAttributes.email())
+                              .orElse(oAuth2UserAttributes.toUser());
+    return userRepository.save(user);
   }
 
 }

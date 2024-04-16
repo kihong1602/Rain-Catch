@@ -1,5 +1,5 @@
 start transaction;
-insert into member (id, create_date, update_date, email, image, name, provider_type, role)
+insert into user (id, create_date, update_date, email, image, nick_name, provider_type, role)
 values (1, now(), now(), 'kks4517@naver.com',
         'http://k.kakaocdn.net/dn/JJEUL/btszGRCwUMV/rVA2FyXPfOb67gNKwvOlL1/img_640x640.jpg', '기홍', 'KAKAO', 'USER');
 insert into rental_station (id, create_date, update_date, address, name, point)

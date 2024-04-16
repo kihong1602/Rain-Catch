@@ -5,6 +5,12 @@ spring:
     password: ${MYSQL_PASSWORD}
     url: ${MYSQL_URL}
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -54,3 +60,5 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+jwt:
+  secret: ${JWT_SECRET}
