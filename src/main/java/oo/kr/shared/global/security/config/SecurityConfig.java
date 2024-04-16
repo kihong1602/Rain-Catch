@@ -36,7 +36,7 @@ public class SecurityConfig {
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()));
 
     http.authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
-        .requestMatchers(HttpMethod.POST, "/api/accounts/signup")
+        .requestMatchers("/api/accounts/**")
         .permitAll()
         .requestMatchers(HttpMethod.GET, "/api/rentals/umbrellas/**")
         .permitAll()

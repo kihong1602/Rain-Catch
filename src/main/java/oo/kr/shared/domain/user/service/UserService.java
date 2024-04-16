@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.rentalrecord.domain.RentalRecord;
 import oo.kr.shared.domain.rentalrecord.domain.repository.RentalRecordRepository;
 import oo.kr.shared.domain.user.controller.request.SignupInfo;
+import oo.kr.shared.domain.user.controller.response.DuplicateEmailResult;
 import oo.kr.shared.domain.user.controller.response.RentalRecordData;
 import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.domain.user.domain.repository.UserRepository;
@@ -27,11 +28,15 @@ public class UserService {
     return rentalRecords.map(RentalRecordData::of);
   }
 
+  public DuplicateEmailResult duplicateCheck(String email) {
+    return new DuplicateEmailResult(userRepository.findByEmail(email)
+                                                  .isEmpty());
+  }
+
   public void register(SignupInfo signupInfo) {
     String email = signupInfo.email();
     String password = encodingPassword(signupInfo.password());
     User user = new User(email, password);
-    // 여기서 중복없는지 체크
     userRepository.save(user);
   }
 

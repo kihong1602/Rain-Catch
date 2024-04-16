@@ -1,7 +1,6 @@
 package oo.kr.shared.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.domain.user.controller.request.SignupInfo;
 import oo.kr.shared.domain.user.controller.response.RentalRecordData;
 import oo.kr.shared.domain.user.service.UserService;
 import oo.kr.shared.global.security.jwt.JwtProvider;
@@ -12,8 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,12 +20,6 @@ public class UserController {
 
   private final UserService userService;
   private final JwtProvider jwtProvider;
-
-  @PostMapping("/api/accounts/signup")
-  public ResponseEntity<?> register(@RequestBody SignupInfo signupInfo) {
-    userService.register(signupInfo);
-    return ResponseEntity.ok("SUCCESS");
-  }
 
   @GetMapping("/api/users/rentals/records")
   public ResponseEntity<Page<RentalRecordData>> viewRentalRecord(
