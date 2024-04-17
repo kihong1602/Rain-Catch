@@ -63,6 +63,14 @@ spring:
             user-name-attribute: id
 jwt:
   secret: ${JWT_SECRET}
+
+network:
+  max-connection: 30
+  max-per-route: 10
+  timeout:
+    connect: 5
+    socket: 5
+
 #logging:
 #  level:
 #    org.springframework.security: trace
