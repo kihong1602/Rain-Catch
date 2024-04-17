@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import oo.kr.shared.domain.payment.domain.Payment;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
 import oo.kr.shared.domain.umbrella.domain.Umbrella;
-import oo.kr.shared.global.utils.BaseEntity;
+import oo.kr.shared.global.type.BaseEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

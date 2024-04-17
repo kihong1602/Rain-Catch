@@ -6,7 +6,7 @@ import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import oo.kr.shared.global.utils.BaseEntity;
+import oo.kr.shared.global.type.BaseEntity;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

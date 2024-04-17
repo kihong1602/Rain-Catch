@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
   @Query(value = "select p from Payment p where p.user.email = :email order by p.createDate desc")
-  List<Payment> findByMemberId(@Param("email") String email, Pageable pageable);
+  List<Payment> findByUserId(@Param("email") String email, Pageable pageable);
 }

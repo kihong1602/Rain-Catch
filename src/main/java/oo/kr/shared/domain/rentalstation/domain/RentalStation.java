@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import oo.kr.shared.domain.umbrella.domain.Umbrella;
-import oo.kr.shared.global.utils.BaseEntity;
+import oo.kr.shared.global.type.BaseEntity;
 import oo.kr.shared.global.utils.GeometryUtil;
 import org.locationtech.jts.geom.Point;
 

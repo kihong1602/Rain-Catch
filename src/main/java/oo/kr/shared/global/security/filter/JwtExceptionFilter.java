@@ -8,9 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
-import oo.kr.shared.global.exception.ErrorResponse;
-import oo.kr.shared.global.security.jwt.ExpiredJwtException;
-import oo.kr.shared.global.security.jwt.InvalidJwtException;
+import oo.kr.shared.global.exception.response.ServiceErrorResponse;
+import oo.kr.shared.global.exception.type.ServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -27,16 +26,13 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       filterChain.doFilter(request, response);
-    } catch (ExpiredJwtException e) {
-      response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    } catch (ServiceException e) {
+      HttpStatus httpStatus = e.getHttpStatus();
+      response.setStatus(httpStatus.value());
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-      objectMapper.writeValue(response.getWriter(), ErrorResponse.create(HttpStatus.UNAUTHORIZED, e.getMessage()));
-    } catch (InvalidJwtException e) {
-      response.setStatus(HttpStatus.BAD_REQUEST.value());
-      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-      response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-      objectMapper.writeValue(response.getWriter(), ErrorResponse.create(HttpStatus.BAD_REQUEST, e.getMessage()));
+      objectMapper.writeValue(response.getWriter(),
+          ServiceErrorResponse.create(e));
     }
   }
 }

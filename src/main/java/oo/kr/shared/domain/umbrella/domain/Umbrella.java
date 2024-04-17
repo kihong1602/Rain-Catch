@@ -10,7 +10,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
-import oo.kr.shared.global.utils.BaseEntity;
+import oo.kr.shared.global.type.BaseEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

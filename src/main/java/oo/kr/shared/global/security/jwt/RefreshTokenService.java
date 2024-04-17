@@ -1,6 +1,8 @@
 package oo.kr.shared.global.security.jwt;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import oo.kr.shared.global.exception.type.jwt.ExpiredRefreshTokenException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +25,16 @@ public class RefreshTokenService {
   @Transactional
   public RefreshToken findTokenInfo(String accessToken) {
     return refreshTokenRepository.findByAccessToken(accessToken)
-                                 .orElseThrow(() -> new RuntimeException("리프레시 토큰이 존재하지 않습니다."));
+                                 .orElseThrow(ExpiredRefreshTokenException::new);
   }
 
   @Transactional
   public void removeRefreshToken(String accessToken) {
-    RefreshToken refreshToken = refreshTokenRepository.findByAccessToken(accessToken)
-                                                      .orElseThrow(RuntimeException::new);
+    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByAccessToken(accessToken);
+    if (optionalRefreshToken.isEmpty()) {
+      return;
+    }
+    RefreshToken refreshToken = optionalRefreshToken.get();
     refreshTokenRepository.delete(refreshToken);
   }
 }

@@ -11,6 +11,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import oo.kr.shared.global.exception.type.jwt.ExpiredRefreshTokenException;
 import oo.kr.shared.global.security.auth.PrincipalDetails;
 import oo.kr.shared.global.security.auth.SecurityUserInfo;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class JwtProvider {
   private Key key;
 
   public static String getJwt(String bearerToken) {
-    final String TOKEN_PREFIX = "bearer ";
+    final String TOKEN_PREFIX = "Bearer ";
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
       return bearerToken.replace(TOKEN_PREFIX, "");
     }
@@ -71,10 +72,9 @@ public class JwtProvider {
       tokenService.saveTokenInfo(tokenInfo);
       return newAccessToken;
     } else {
-      throw new RuntimeException("리프레시 토큰이 만료되었습니다.");
+      throw new ExpiredRefreshTokenException();
     }
   }
-
 
   public JwtResultType verifyToken(String token) {
     try {
