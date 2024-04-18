@@ -16,7 +16,7 @@ public class QUmbrellaRepositoryImpl implements QUmbrellaRepository {
   @Override
   public Optional<Umbrella> findByUmbrellaId(Long id) {
     Umbrella umbrella = query.selectFrom(QUmbrella.umbrella)
-                             .join(QUmbrella.umbrella.currentStation)
+                             .leftJoin(QUmbrella.umbrella.currentStation)
                              .fetchJoin()
                              .where(QUmbrella.umbrella.id.eq(id))
                              .fetchOne();
