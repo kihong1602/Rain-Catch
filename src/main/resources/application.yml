@@ -71,6 +71,10 @@ network:
     connect: 5
     socket: 5
 
+port-one:
+  imp-key: ${IMP_KEY}
+  imp-secret: ${IMP_SECRET}
+
 #logging:
 #  level:
 #    org.springframework.security: trace

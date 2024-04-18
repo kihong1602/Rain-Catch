@@ -14,6 +14,9 @@ import oo.kr.shared.domain.umbrella.domain.repository.UmbrellaRepository;
 import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.domain.user.domain.repository.UserRepository;
 import oo.kr.shared.global.exception.type.entity.EntityNotFoundException;
+import oo.kr.shared.global.portone.PaymentClient;
+import oo.kr.shared.global.portone.PreRegisterPaymentData;
+import oo.kr.shared.global.utils.CodeCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,14 @@ public class PaymentService {
   private final PaymentRepository paymentRepository;
   private final UmbrellaRepository umbrellaRepository;
   private final RentalRecordRepository rentalRecordRepository;
+  private final PaymentClient paymentClient;
+
+  @Transactional(readOnly = true)
+  public PreRegisterPaymentData preRegisterPayment(String email, Integer amount) {
+    String merchantUid = CodeCreator.createMerchantUid(email);
+    PreRegisterPaymentData preRegisterPaymentData = new PreRegisterPaymentData(merchantUid, amount);
+    return paymentClient.preRegister(preRegisterPaymentData);
+  }
 
   @Transactional
   public void completedPayment(RequiredPaymentInfo paymentInfo, String email) {
