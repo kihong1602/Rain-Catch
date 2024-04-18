@@ -11,7 +11,7 @@ import org.locationtech.jts.io.WKTReader;
 public class GeometryUtil {
 
   public static Point createPoint(double latitude, double longitude) {
-    String pointFormat = String.format("POINT(%f %f)", latitude, longitude);
+    String pointFormat = String.format("POINT(%f %f)", longitude, latitude);
     try {
       return (Point) new WKTReader().read(pointFormat);
     } catch (ParseException ex) {

@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import oo.kr.shared.domain.payment.controller.request.RequiredPaymentData;
 import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.global.type.BaseEntity;
 
@@ -36,4 +37,7 @@ public class Payment extends BaseEntity {
     this.user = user;
   }
 
+  public static Payment create(RequiredPaymentData paymentData, User user) {
+    return new Payment(paymentData.impUid(), paymentData.merchantUid(), paymentData.amount(), user);
+  }
 }

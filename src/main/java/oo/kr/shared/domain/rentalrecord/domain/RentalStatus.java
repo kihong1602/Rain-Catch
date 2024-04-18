@@ -16,4 +16,8 @@ public enum RentalStatus {
   public String getDescription() {
     return description;
   }
+
+  public boolean isReturned() {
+    return this.equals(RETURN);
+  }
 }

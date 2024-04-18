@@ -25,6 +25,7 @@ public class Umbrella extends BaseEntity {
   private RentalStation currentStation;
 
   public void rent() {
+    umbrellaStatus = UmbrellaStatus.RENTED;
     currentStation = null;
   }
 

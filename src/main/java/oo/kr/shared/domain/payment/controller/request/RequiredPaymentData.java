@@ -2,11 +2,7 @@ package oo.kr.shared.domain.payment.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record RequiredPaymentInfo(
-
-    @JsonProperty("umbrella_id")
-    Long umbrellaId,
-
+public record RequiredPaymentData(
     @JsonProperty("imp_uid")
     String impUid,
 

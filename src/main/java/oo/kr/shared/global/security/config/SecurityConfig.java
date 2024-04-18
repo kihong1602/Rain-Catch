@@ -35,13 +35,7 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()));
 
-    http.authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
-        .requestMatchers("/api/accounts/**")
-        .permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/rentals/umbrellas/**")
-        .permitAll()
-        .anyRequest()
-        .authenticated());
+    configureAuthorizeRequestMatcher(http); // authorizeHttpRequests
 
     http.sessionManagement(managementConfigurer -> managementConfigurer
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -97,6 +91,16 @@ public class SecurityConfig {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
+  }
+
+  private void configureAuthorizeRequestMatcher(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(requestRegistry -> requestRegistry
+        .requestMatchers("/api/accounts/**")
+        .permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/rentals/umbrellas/**")
+        .permitAll()
+        .anyRequest()
+        .authenticated());
   }
 
 }

@@ -20,6 +20,9 @@ public class UserController {
 
   private final UserService userService;
 
+  /**
+   * 대여기록 조회 API
+   */
   @GetMapping("/rentals/records")
   public ResponseEntity<Page<RentalRecordData>> viewRentalRecord(
       @PageableDefault(sort = "createDate", direction = Sort.Direction.ASC) Pageable pageable) {
