@@ -24,7 +24,7 @@ public class PaymentClient {
   private String impSecret;
 
   public PreRegisterPaymentData preRegister(PreRegisterPaymentData paymentData) {
-    String accessToken = getToken();
+    String accessToken = getAccessToken();
     String requestBody = jsonUtils.serializeObjectToJson(paymentData);
     PaymentResult result = restClient.post()
                                      .uri("/payments/prepare")
@@ -37,7 +37,20 @@ public class PaymentClient {
     return jsonUtils.convertValue(result.response(), PreRegisterPaymentData.class);
   }
 
-  private String getToken() {
+  public SinglePaymentInfo findSinglePaymentInfo(String impUid) {
+    String accessToken = getAccessToken();
+    String requestUri = "/payments/" + impUid;
+    PaymentResult result = restClient.get()
+                                     .uri(requestUri)
+                                     .headers(header -> {
+                                       header.add(HttpHeaders.AUTHORIZATION, accessToken);
+                                       header.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+                                     })
+                                     .exchange((req, res) -> checkResponse(res));
+    return jsonUtils.convertValue(result.response(), SinglePaymentInfo.class);
+  }
+
+  private String getAccessToken() {
     AccessTokenRequest tokenRequest = new AccessTokenRequest(impKey, impSecret);
     String requestBody = jsonUtils.serializeObjectToJson(tokenRequest);
     PaymentResult result = restClient.post()

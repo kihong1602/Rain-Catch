@@ -21,12 +21,18 @@ public class SignUpController {
 
   private final UserService userService;
 
+  /**
+   * 이메일 중복 체크 API
+   */
   @GetMapping("/duplicate")
   public ResponseEntity<DuplicateEmailResult> duplicateEmail(@RequestParam("email") String email) {
     DuplicateEmailResult duplicateEmailResult = userService.duplicateCheck(email);
     return ResponseEntity.ok(duplicateEmailResult);
   }
 
+  /**
+   * 회원가입 API
+   */
   @PostMapping("/signup")
   public ResponseEntity<SimpleResponse> register(@RequestBody SignupInfo signupInfo) {
     userService.register(signupInfo);

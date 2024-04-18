@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import oo.kr.shared.domain.payment.domain.Payment;
@@ -34,7 +35,7 @@ public class RentalRecord extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private RentalStatus rentalStatus = RentalStatus.RENTED;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "payment_id")
   private Payment payment;
 
@@ -50,8 +51,9 @@ public class RentalRecord extends BaseEntity {
   @JoinColumn(name = "return_station_id")
   private RentalStation returnStation;
 
-  public RentalRecord(LocalDateTime rentalTime, Payment payment, Umbrella umbrella, RentalStation rentalStation) {
-    this.rentalTime = rentalTime;
+  @Builder
+  private RentalRecord(Payment payment, Umbrella umbrella, RentalStation rentalStation) {
+    this.rentalTime = payment.getCreateDate();
     this.expectedReturnTime = rentalTime.plusDays(1L);
     this.payment = payment;
     this.umbrella = umbrella;

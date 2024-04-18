@@ -36,10 +36,6 @@ public class SecurityConfig {
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()));
 
     configureAuthorizeRequestMatcher(http); // authorizeHttpRequests
-//    http.authorizeHttpRequests(requestMatcherRegistry -> requestMatcherRegistry
-//        .anyRequest()
-//        .permitAll()
-//    ); // 개발용
 
     http.sessionManagement(managementConfigurer -> managementConfigurer
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
