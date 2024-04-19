@@ -17,7 +17,7 @@ const tokenFreeEndPoints = [
 customAxios.interceptors.request.use(
     request => {
       let isRequiredToken = true;
-      const requestUrl = new URL(request.url, SERVER_URL).pathname;
+      const requestUrl = new URL(request.url, `${SERVER_URL}`).pathname;
       const requestMethod = request.method.toUpperCase();
       tokenFreeEndPoints.forEach(({pattern, method}) => {
         if (pattern.test(requestUrl) && method === requestMethod) {
