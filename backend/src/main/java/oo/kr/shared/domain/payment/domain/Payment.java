@@ -27,7 +27,7 @@ public class Payment extends BaseEntity {
   private PaymentStatus paymentStatus = PaymentStatus.COMPLETED;
 
   @ManyToOne
-  @JoinColumn(name = "member_id")
+  @JoinColumn(name = "user_id")
   private User user;
 
   public Payment(String impUid, String merchantUid, Integer amount, User user) {

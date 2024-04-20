@@ -12,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -62,16 +61,6 @@ public class SecurityConfig {
   }
 
   @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    return web -> web
-        .ignoring()
-        .requestMatchers(
-            PathRequest.toStaticResources()
-                       .atCommonLocations()
-        );
-  }
-
-  @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     List<String> origins = List.of("*");
@@ -95,6 +84,9 @@ public class SecurityConfig {
 
   private void configureAuthorizeRequestMatcher(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(requestRegistry -> requestRegistry
+        .requestMatchers(PathRequest.toStaticResources()
+                                    .atCommonLocations())
+        .permitAll()
         .requestMatchers("/api/accounts/**")
         .permitAll()
         .requestMatchers(HttpMethod.GET, "/api/rentals/umbrellas/**")

@@ -23,7 +23,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  @Transactional
+  @Transactional(readOnly = true)
   public Page<RentalRecordData> viewRentalRecord(String email, Pageable pageable) {
     User user = userRepository.findByEmail(email)
                               .orElseThrow(EntityNotFoundException::new);
@@ -31,7 +31,7 @@ public class UserService {
     return rentalRecords.map(RentalRecordData::of);
   }
 
-  @Transactional
+  @Transactional(readOnly = true)
   public DuplicateEmailResult duplicateCheck(String email) {
     return new DuplicateEmailResult(userRepository.findByEmail(email)
                                                   .isEmpty());

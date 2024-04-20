@@ -1,3 +1,11 @@
+set foreign_key_checks = 0;
+truncate table rental_record;
+truncate table payment;
+truncate table umbrella;
+truncate table rental_station;
+truncate table user;
+set foreign_key_checks = 1;
+
 start transaction;
 insert into user (id, create_date, update_date, email, image, nick_name, provider_type, role)
 values (1, now(), now(), 'kks4517@naver.com',
