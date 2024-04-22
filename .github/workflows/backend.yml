@@ -1,0 +1,48 @@
+name: Shared Springboot CI/CD with Gradle
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'backend/**'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: MAIN
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        with:
+          gradle-version: current
+          cache-read-only: ${{ github.ref != 'refs/heades/main' }}
+
+      - name: Build with Gradle
+        run: |
+          cd backend
+          gradle clean build --info
+        env:
+          GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+          GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+          KAKAO_ID: ${{ secrets.KAKAO_ID }}
+          KAKAO_SECRET: ${{ secrets.KAKAO_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          IMP_KEY: ${{ secrets.IMP_KEY }}
+          IMP_SECRET: ${{ secrets.IMP_SECRET }}
