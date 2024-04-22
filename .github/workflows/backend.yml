@@ -11,6 +11,7 @@ on:
       - 'backend/**'
 
 permissions:
+  id-token: write # This is required for requesting the JWT
   contents: read
 
 jobs:
@@ -19,7 +20,7 @@ jobs:
     environment: MAIN
 
     steps:
-      - name: Checkout
+      - name: Git Clone Repository
         uses: actions/checkout@v4
 
       - name: Setup JDK
@@ -32,7 +33,13 @@ jobs:
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
         with:
           gradle-version: current
-          cache-read-only: ${{ github.ref != 'refs/heades/main' }}
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       - name: Start Redis
         uses: supercharge/redis-github-action@1.8.0
@@ -49,3 +56,27 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           IMP_KEY: ${{ secrets.IMP_KEY }}
           IMP_SECRET: ${{ secrets.IMP_SECRET }}
+
+      - name: Zipping Build File
+        uses: montudor/action-zip@v1
+
+      - name: Zip Build File & Upload to S3
+        run: |
+          cd backend
+          zip -vr ./build/$GITHUB_SHA.zip .;
+          ls -l ./build;
+          aws s3 cp --region ${{ env.AWS_DEFAULT_REGION }} ./build/$GITHUB_SHA.zip s3://$AWS_BUCKET_TO_DEPLOY/dev/$GITHUB_SHA.zip;
+        env:
+          AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
+
+      - name: Code Deploy To EC2 instance
+        run: aws deploy create-deployment
+          --application-name $AWS_CODE_DEPLOY_APP
+          --deployment-config-name $AWS_CODE_DEPLOY_CONFIG
+          --deployment-group-name $AWS_CODE_DEPLOY_GROUP
+          --s3-location bucket=$AWS_BUCKET_TO_DEPLOY.bundleType-zip,key=dev/$GITHUB_SHA.zip
+        env:
+          AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
+          AWS_CODE_DEPLOY_APP: ${{ secrets.AWS_CODE_DEPLOY_APP }}
+          AWS_CODE_DEPLOY_CONFIG: ${{ secrets.AWS_CODE_DEPLOY_CONFIG }}
+          AWS_CODE_DEPLOY_GROUP: ${{ secrets.AWS_CODE_DEPLOY_GROUP }}
