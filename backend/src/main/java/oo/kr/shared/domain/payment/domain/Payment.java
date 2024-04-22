@@ -1,5 +1,6 @@
 package oo.kr.shared.domain.payment.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,13 +18,17 @@ import oo.kr.shared.global.type.BaseEntity;
 @Entity
 public class Payment extends BaseEntity {
 
+  @Column(nullable = false, unique = true)
   private String impUid;
 
+  @Column(nullable = false, unique = true)
   private String merchantUid;
 
+  @Column(nullable = false)
   private Integer amount;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private PaymentStatus paymentStatus = PaymentStatus.COMPLETED;
 
   @ManyToOne

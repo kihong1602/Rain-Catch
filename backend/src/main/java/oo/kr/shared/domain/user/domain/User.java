@@ -1,5 +1,6 @@
 package oo.kr.shared.domain.user.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,13 +14,23 @@ import oo.kr.shared.global.type.BaseEntity;
 @Entity
 public class User extends BaseEntity {
 
+  @Column(nullable = false)
   private String nickName;
+
+  @Column(nullable = false)
   private String password;
+
+  @Column(nullable = false, unique = true)
   private String email;
+
   private String image;
+
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private ProviderType providerType = ProviderType.LOCAL;
+
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private Role role = Role.USER;
 
   public User(String email, String password) {

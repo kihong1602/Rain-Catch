@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -23,31 +24,32 @@ import oo.kr.shared.global.type.BaseEntity;
 @Entity
 public class RentalRecord extends BaseEntity {
 
-  @Column(columnDefinition = "datetime")
+  @Column(nullable = false, columnDefinition = "datetime")
   private LocalDateTime rentalTime;
 
   @Column(columnDefinition = "datetime")
   private LocalDateTime returnTime;
 
-  @Column(columnDefinition = "datetime")
+  @Column(nullable = false, columnDefinition = "datetime")
   private LocalDateTime expectedReturnTime;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private RentalStatus rentalStatus = RentalStatus.RENTED;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "payment_id")
   private Payment payment;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "umbrella_id")
   private Umbrella umbrella;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "rental_station_id")
   private RentalStation rentalStation;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "return_station_id")
   private RentalStation returnStation;
 
