@@ -1,8 +1,9 @@
-package oo.kr.shared.global.security.jwt;
+package oo.kr.shared.global.security;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import oo.kr.shared.global.exception.type.jwt.ExpiredRefreshTokenException;
+import oo.kr.shared.global.security.jwt.RefreshTokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
