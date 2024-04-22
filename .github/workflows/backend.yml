@@ -34,6 +34,9 @@ jobs:
           gradle-version: current
           cache-read-only: ${{ github.ref != 'refs/heades/main' }}
 
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.8.0
+
       - name: Build with Gradle
         run: |
           cd backend
