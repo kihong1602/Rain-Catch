@@ -1,5 +1,6 @@
 package oo.kr.shared.domain.umbrella.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,6 +19,7 @@ import oo.kr.shared.global.type.BaseEntity;
 public class Umbrella extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private UmbrellaStatus umbrellaStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
