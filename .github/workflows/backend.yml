@@ -39,7 +39,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Start Redis
         uses: supercharge/redis-github-action@1.8.0
@@ -65,7 +65,7 @@ jobs:
           cd backend
           zip -vr ./build/$GITHUB_SHA.zip .;
           ls -l ./build;
-          aws s3 cp --region ${{ env.AWS_DEFAULT_REGION }} ./build/$GITHUB_SHA.zip s3://$AWS_BUCKET_TO_DEPLOY/dev/$GITHUB_SHA.zip;
+          aws s3 cp --region ${{ secrets.AWS_DEFAULT_REGION }} ./build/$GITHUB_SHA.zip s3://$AWS_BUCKET_TO_DEPLOY/dev/$GITHUB_SHA.zip;
         env:
           AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
 
