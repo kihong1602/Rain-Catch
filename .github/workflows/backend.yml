@@ -57,7 +57,7 @@ jobs:
           IMP_KEY: ${{ secrets.IMP_KEY }}
           IMP_SECRET: ${{ secrets.IMP_SECRET }}
 
-      - name: Zipping Build File
+      - name: Install Zip Action
         uses: montudor/action-zip@v1
 
       - name: Zip Build File & Upload to S3
