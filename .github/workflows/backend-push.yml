@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   call-reusable-build:
-    uses: ./.github/workflows/backend-build.yml@main
+    uses: ./.github/workflows/backend-build.yml
 
   deploy:
     needs: call-reusable-build
