@@ -1,0 +1,71 @@
+name: Shared Springboot Build Workflow
+
+on:
+  workflow_call:
+    secrets:
+      GOOGLE_ID:
+        required: true
+      GOOGLE_SECRET:
+        required: true
+      KAKAO_ID:
+        required: true
+      KAKAO_SECRET:
+        required: true
+      JWT_SECRET:
+        required: true
+      IMP_KEY:
+        required: true
+      IMP_SECRET:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git Clone Repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+        with:
+          gradle-version: current
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.8.0
+
+      - name: Build With Gradle
+        run: |
+          cd backend
+          gradle clean build --info
+        env:
+          GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+          GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+          KAKAO_ID: ${{ secrets.KAKAO_ID }}
+          KAKAO_SECRET: ${{ secrets.KAKAO_SECRET }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          IMP_KEY: ${{ secrets.IMP_KEY }}
+          IMP_SECRET: ${{ secrets.IMP_SECRET }}
+
+      - name: Install Zip Action
+        if: github.event_name == 'push'
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r backend.zip backend
+
+      - name: Upload Zip File to Artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend.zip
+          path: backend.zip

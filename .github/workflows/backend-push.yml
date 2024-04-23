@@ -1,0 +1,53 @@
+name: Shared Backend Push Actions
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'backend/**'
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read
+
+jobs:
+  call-reusable-build:
+    uses: ./.github/workflows/backend-build.yml
+    secrets: inherit
+
+  deploy:
+    needs: call-reusable-build
+    runs-on: ubuntu-latest
+    environment: DEPLOY
+
+    steps:
+      - name: Download Zip File to Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend.zip
+          run: ls -a
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Upload to S3
+        run: |
+          ls -a
+          aws s3 cp --region ${{ secrets.AWS_DEFAULT_REGION }} backend.zip s3://$AWS_BUCKET_TO_DEPLOY/dev/$GITHUB_SHA.zip;
+        env:
+          AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
+
+      - name: Code Deploy To EC2 instance
+        run: aws deploy create-deployment
+          --application-name $AWS_CODE_DEPLOY_APP
+          --deployment-config-name $AWS_CODE_DEPLOY_CONFIG
+          --deployment-group-name $AWS_CODE_DEPLOY_GROUP
+          --s3-location bucket=$AWS_BUCKET_TO_DEPLOY,bundleType=zip,key=dev/$GITHUB_SHA.zip
+        env:
+          AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
+          AWS_CODE_DEPLOY_APP: ${{ secrets.AWS_CODE_DEPLOY_APP }}
+          AWS_CODE_DEPLOY_CONFIG: ${{ secrets.AWS_CODE_DEPLOY_CONFIG }}
+          AWS_CODE_DEPLOY_GROUP: ${{ secrets.AWS_CODE_DEPLOY_GROUP }}

@@ -3,8 +3,7 @@
 ## Set Variables
 APP_NAME="raincatch"
 DEV_DIR="/home/ubuntu/$APP_NAME/dev"
-JAR_NAME=$(find "$DEV_DIR" -name "*SNAPSHOT.jar" -print0 | xargs -0 ls -t | head -n 1)
-JAR_PATH="$DEV_DIR/build/libs/$JAR_NAME"
+JAR_PATH=$(find "$DEV_DIR" -name "*SNAPSHOT.jar" -print0 | xargs -0 ls -t | head -n 1)
 ENV_PATH="$DEV_DIR/env"
 
 APP_LOG="$DEV_DIR/log/app.log"
@@ -29,7 +28,7 @@ fi
 NOW=$(date +%c)
 mkdir -p $DEV_DIR/log
 echo "> Start Application: 어플리케이션을 실행합니다. || $JAR_PATH ($NOW)"
-.$ENV_PATH/env.sh # 설정해둔 환경변수 파일 실행 -> 스크립트 내에서만 지역적으로 변수 등록
+. $ENV_PATH/env.sh # 설정해둔 환경변수 파일 실행 -> 스크립트 내에서만 지역적으로 변수 등록
 nohup java -jar "$JAR_PATH" > $APP_LOG 2> $ERROR_LOG &
 # nohup : 터미널이 끊겨도 계속 실행
 # > $APP_LOG : 지정된 경로에 어플리케이션 로그를 등록
