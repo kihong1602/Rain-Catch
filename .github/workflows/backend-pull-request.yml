@@ -12,3 +12,6 @@ permissions:
 jobs:
   call-reusable-build:
     uses: ./.github/workflows/backend-build.yml
+    with:
+      secrets: inherit
+      environment: BUILD

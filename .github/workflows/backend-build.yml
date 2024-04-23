@@ -2,7 +2,21 @@ name: Shared Springboot Build Workflow
 
 on:
   workflow_call:
-    environment: BUILD
+    secrets:
+      GOOGLE_ID:
+        required: true
+      GOOGLE_SECRET:
+        required: true
+      KAKAO_ID:
+        required: true
+      KAKAO_SECRET:
+        required: true
+      JWT_SECRET:
+        required: true
+      IMP_KEY:
+        required: true
+      IMP_SECRET:
+        required: true
 
 permissions:
   contents: read
