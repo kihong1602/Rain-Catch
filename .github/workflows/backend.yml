@@ -74,7 +74,7 @@ jobs:
           --application-name $AWS_CODE_DEPLOY_APP
           --deployment-config-name $AWS_CODE_DEPLOY_CONFIG
           --deployment-group-name $AWS_CODE_DEPLOY_GROUP
-          --s3-location bucket=$AWS_BUCKET_TO_DEPLOY.bundleType-zip,key=dev/$GITHUB_SHA.zip
+          --s3-location bucket=$AWS_BUCKET_TO_DEPLOY.bundleType=zip,key=dev/$GITHUB_SHA.zip
         env:
           AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
           AWS_CODE_DEPLOY_APP: ${{ secrets.AWS_CODE_DEPLOY_APP }}
