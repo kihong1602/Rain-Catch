@@ -18,7 +18,7 @@ class RefreshTokenServiceTest {
   private RefreshTokenService refreshTokenService;
 
   @Test
-  @DisplayName("리프레시 토큰 만료시 ExpiredRefreshTokenException 발생")
+  @DisplayName("리프레시 토큰 만료시 ExpiredRefreshTokenException이 발생한다")
   void expiredTokenExceptionTest() {
     assertThatThrownBy(() -> refreshTokenService.findTokenInfo("expiredToken"))
         .isInstanceOf(ExpiredRefreshTokenException.class);

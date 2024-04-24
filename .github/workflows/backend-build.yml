@@ -9,6 +9,18 @@ jobs:
     environment: BACK_BUILD
 
     steps:
+      - name: Check Secrets Availability
+        run: |
+          [ ! -z "${{ secrets.GOOGLE_ID }}" ] && echo "GOOGLE_ID is set."
+          [ ! -z "${{ secrets.GOOGLE_SECRET }}" ] && echo "GOOGLE_SECRET is set."
+          [ ! -z "${{ secrets.KAKAO_ID }}" ] && echo "KAKAO_ID is set."
+          [ ! -z "${{ secrets.KAKAO_SECRET }}" ] && echo "KAKAO_SECRET is set."
+          [ ! -z "${{ secrets.JWT_SECRET }}" ] && echo "JWT_SECRET is set."
+          [ ! -z "${{ secrets.IMP_KEY }}" ] && echo "IMP_KEY is set."
+          [ ! -z "${{ secrets.IMP_SECRET }}" ] && echo "IMP_SECRET is set."
+        shell: bash
+        working-directory: ./backend
+
       - name: Git Clone Repository
         uses: actions/checkout@v4
 
