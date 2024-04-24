@@ -40,18 +40,23 @@ jobs:
       - name: Upload to S3
         run: |
           ls -a
-          aws s3 cp --region ${{ secrets.AWS_DEFAULT_REGION }} ${{ inputs.path }}.zip s3://$AWS_BUCKET_TO_DEPLOY/${{ inputs.path }}/$GITHUB_SHA.zip;
+          echo "Uploading ${ZIP_PATH} to S3 bucket $AWS_BUCKET_TO_DEPLOY at ${ARTIFACT_PATH}/$GITHUB_SHA.zip"
+          aws s3 cp --region $AWS_DEFAULT_REGION $ZIP_PATH s3://$AWS_BUCKET_TO_DEPLOY/$ARTIFACT_PATH/$GITHUB_SHA.zip;
         env:
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
+          ARTIFACT_PATH: ${{ inputs.path }}
+          ZIP_PATH: ${{ inputs.path }}.zip
 
       - name: Code Deploy To EC2 instance
         run: aws deploy create-deployment
           --application-name $AWS_CODE_DEPLOY_APP
           --deployment-config-name $AWS_CODE_DEPLOY_CONFIG
           --deployment-group-name $AWS_CODE_DEPLOY_GROUP
-          --s3-location bucket=$AWS_BUCKET_TO_DEPLOY,bundleType=zip,key=back/$GITHUB_SHA.zip
+          --s3-location bucket=$AWS_BUCKET_TO_DEPLOY,bundleType=zip,key=$ARTIFACT_PATH/$GITHUB_SHA.zip
         env:
           AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
           AWS_CODE_DEPLOY_APP: ${{ secrets.AWS_CODE_DEPLOY_APP }}
           AWS_CODE_DEPLOY_CONFIG: ${{ secrets.AWS_CODE_DEPLOY_CONFIG }}
           AWS_CODE_DEPLOY_GROUP: ${{ secrets.AWS_CODE_DEPLOY_GROUP }}
+          ARTIFACT_PATH: ${{ inputs.path }}
