@@ -18,17 +18,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-        with:
-          gradle-version: current
-          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
-
       - name: Start Redis
         uses: supercharge/redis-github-action@1.8.0
 
       - name: Build With Gradle
-        run: ./gradle clean build --info
+        run: ./gradlew clean build --info
         working-directory: ./backend
         env:
           GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
