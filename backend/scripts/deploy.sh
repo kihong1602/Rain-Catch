@@ -2,7 +2,7 @@
 
 ## Set Variables
 APP_NAME="raincatch"
-DEV_DIR="/home/ubuntu/$APP_NAME/dev"
+DEV_DIR="/home/ubuntu/$APP_NAME/back"
 JAR_PATH=$(find "$DEV_DIR" -name "*SNAPSHOT.jar" -print0 | xargs -0 ls -t | head -n 1)
 ENV_PATH="$DEV_DIR/env"
 

@@ -1,14 +1,14 @@
-name: Shared Backend Pull Request Actions
+name: Shared Frontend Pull Request Actions
 
 on:
   pull_request:
     branches: ["main"]
     paths:
-      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
   call-reusable-build:
-    uses: ./.github/workflows/backend-build.yml
+    uses: ./.github/workflows/frontend-build.yml
     secrets: inherit
     permissions:
       contents: read

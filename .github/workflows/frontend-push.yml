@@ -1,14 +1,14 @@
-name: Shared Backend Push Actions
+name: Shared Frontend Push Actions
 
 on:
   push:
     branches: ["main"]
     paths:
-      - 'backend/**'
+      - 'frontend/**'
 
 jobs:
   call-reusable-build:
-    uses: ./.github/workflows/backend-build.yml
+    uses: ./.github/workflows/frontend-build.yml
     secrets: inherit
     permissions:
       contents: read
@@ -20,4 +20,4 @@ jobs:
     permissions:
       id-token: write
     with:
-      path: 'backend'
+      path: 'frontend'
