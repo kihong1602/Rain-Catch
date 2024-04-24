@@ -38,9 +38,7 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Upload to S3
-        run: |
-          ls -a
-          aws s3 cp --region ${{ secrets.AWS_DEFAULT_REGION }} $PATH.zip s3://$AWS_BUCKET_TO_DEPLOY/$PATH/$GITHUB_SHA.zip;
+        run: aws s3 cp --region ${{ secrets.AWS_DEFAULT_REGION }} $PATH.zip s3://$AWS_BUCKET_TO_DEPLOY/$PATH/$GITHUB_SHA.zip;
         env:
           AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
           PATH: ${{ inputs.path }}

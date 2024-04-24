@@ -30,7 +30,7 @@ class UserServiceTest {
   }
 
   @Test
-  @DisplayName("중복된 이메일 값을 입력하면 false 반환.")
+  @DisplayName("중복된 이메일 값을 입력하면 false 반환")
   void duplicateCheckReturnFalse() {
     //given
 
