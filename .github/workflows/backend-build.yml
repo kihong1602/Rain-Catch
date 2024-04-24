@@ -2,27 +2,29 @@ name: Shared Springboot Build Workflow
 
 on:
   workflow_call:
+    secrets:
+        GOOGLE_ID:
+          required: true
+        GOOGLE_SECRET:
+          required: true
+        KAKAO_ID:
+          required: true
+        KAKAO_SECRET:
+          required: true
+        JWT_SECRET:
+          required: true
+        IMP_KEY:
+          required: true
+        IMP_SECRET:
+          required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: BACK_BUILD
 
     steps:
       - name: Git Clone Repository
         uses: actions/checkout@v4
-
-      - name: Check Secrets Availability
-        run: |
-          [ ! -z "${{ secrets.GOOGLE_ID }}" ] && echo "GOOGLE_ID is set."
-          [ ! -z "${{ secrets.GOOGLE_SECRET }}" ] && echo "GOOGLE_SECRET is set."
-          [ ! -z "${{ secrets.KAKAO_ID }}" ] && echo "KAKAO_ID is set."
-          [ ! -z "${{ secrets.KAKAO_SECRET }}" ] && echo "KAKAO_SECRET is set."
-          [ ! -z "${{ secrets.JWT_SECRET }}" ] && echo "JWT_SECRET is set."
-          [ ! -z "${{ secrets.IMP_KEY }}" ] && echo "IMP_KEY is set."
-          [ ! -z "${{ secrets.IMP_SECRET }}" ] && echo "IMP_SECRET is set."
-        shell: bash
-        working-directory: ./backend
 
       - name: Setup JDK temurin 17
         uses: actions/setup-java@v4

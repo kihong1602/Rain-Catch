@@ -9,12 +9,14 @@ on:
 jobs:
   call-reusable-build:
     uses: ./.github/workflows/frontend-build.yml
+    secrets: inherit
     permissions:
       contents: read
 
   call-reusable-deploy:
     needs: call-reusable-build
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
     permissions:
       id-token: write
     with:

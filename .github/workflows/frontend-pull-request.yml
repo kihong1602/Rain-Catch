@@ -9,5 +9,6 @@ on:
 jobs:
   call-reusable-build:
     uses: ./.github/workflows/frontend-build.yml
+    secrets: inherit
     permissions:
       contents: read

@@ -6,6 +6,19 @@ on:
       path:
         required: true
         type: string
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+      AWS_BUCKET_TO_DEPLOY:
+        required: true
+      AWS_CODE_DEPLOY_APP:
+        required: true
+      AWS_CODE_DEPLOY_GROUP:
+        required: true
+      AWS_CODE_DEPLOY_CONFIG:
+        required: true
 
 jobs:
   deploy:
