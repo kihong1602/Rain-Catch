@@ -1,15 +1,15 @@
 version: 0.0 # 파일 버전을 지정. 현재 유일하게 허용되는 값은 0.0
 os: linux
 
-# '/home/ubuntu/raincatch/dev' 경로에 빌드파일을 위치
+# '/home/ubuntu/raincatch/back' 경로에 빌드파일을 위치
 files:
-  - source: / # 인스턴스에 복사항 파일 또는 디렉토리를 식별 -> / 이라면 수정버전의 모든파일이 인스턴스에 복사
-    destination: /home/ubuntu/raincatch/dev # 인스턴스에 파일이 복사되어야할 위치를 지정
-    overwrite: yes #
+  - source: / # 인스턴스에 복사할 파일 또는 디렉토리를 식별 -> / 이라면 수정버전의 모든파일이 인스턴스에 복사
+    destination: /home/ubuntu/raincatch/back # 인스턴스에 파일이 복사되어야할 위치를 지정
+    overwrite: yes
 
 # 파일 권한을 갖는 사용자 and 그룹을 ubuntu로 설정
 permission:
-  - object: /home/ubuntu/raincatch/dev
+  - object: /home/ubuntu/raincatch/back
     owner: ubuntu
     group: ubuntu
 
