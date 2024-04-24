@@ -21,6 +21,10 @@ jobs:
       - name: Start Redis
         uses: supercharge/redis-github-action@1.8.0
 
+      - name: Grant execute permission to Gradlew
+        run: chmod +x ./gradlew
+        working-directory: ./backend
+
       - name: Build With Gradle
         run: ./gradlew clean build --info
         working-directory: ./backend
