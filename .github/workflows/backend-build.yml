@@ -9,6 +9,9 @@ jobs:
     environment: BACK_BUILD
 
     steps:
+      - name: Git Clone Repository
+        uses: actions/checkout@v4
+
       - name: Check Secrets Availability
         run: |
           [ ! -z "${{ secrets.GOOGLE_ID }}" ] && echo "GOOGLE_ID is set."
@@ -20,9 +23,6 @@ jobs:
           [ ! -z "${{ secrets.IMP_SECRET }}" ] && echo "IMP_SECRET is set."
         shell: bash
         working-directory: ./backend
-
-      - name: Git Clone Repository
-        uses: actions/checkout@v4
 
       - name: Setup JDK temurin 17
         uses: actions/setup-java@v4
