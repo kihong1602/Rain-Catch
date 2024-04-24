@@ -2,34 +2,17 @@ name: Shared Springboot Build Workflow
 
 on:
   workflow_call:
-    secrets:
-      GOOGLE_ID:
-        required: true
-      GOOGLE_SECRET:
-        required: true
-      KAKAO_ID:
-        required: true
-      KAKAO_SECRET:
-        required: true
-      JWT_SECRET:
-        required: true
-      IMP_KEY:
-        required: true
-      IMP_SECRET:
-        required: true
-
-permissions:
-  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: BACK_BUILD
 
     steps:
       - name: Git Clone Repository
         uses: actions/checkout@v4
 
-      - name: Setup JDK
+      - name: Setup JDK temurin 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -45,7 +28,7 @@ jobs:
         uses: supercharge/redis-github-action@1.8.0
 
       - name: Build With Gradle
-        run: gradle clean build --info
+        run: ./gradle clean build --info
         working-directory: ./backend
         env:
           GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
