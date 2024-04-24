@@ -45,9 +45,8 @@ jobs:
         uses: supercharge/redis-github-action@1.8.0
 
       - name: Build With Gradle
-        run: |
-          cd backend
-          gradle clean build --info
+        run: gradle clean build --info
+        working-directory: ./backend
         env:
           GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
           GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
@@ -57,11 +56,10 @@ jobs:
           IMP_KEY: ${{ secrets.IMP_KEY }}
           IMP_SECRET: ${{ secrets.IMP_SECRET }}
 
-      - name: Install Zip Action
+      - name: Zip Build File
         if: github.event_name == 'push'
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -qq -r backend.zip backend
+        run: zip -q -r ../backend.zip build/libs scripts appspec.yml
+        working-directory: ./backend
 
       - name: Upload Zip File to Artifact
         if: github.event_name == 'push'

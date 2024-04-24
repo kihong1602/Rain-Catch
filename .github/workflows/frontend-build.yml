@@ -1,0 +1,60 @@
+name: Shared React Build Workflow
+
+on:
+  workflow_call:
+    secrets:
+      REACT_APP_IMP_CODE:
+        required: true
+      REACT_APP_SERVER_URL:
+        required: true
+
+
+permissions:
+  contents: read
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+
+    steps:
+      - name: Git clone Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: npm clean install
+        run: npm ci
+        working-directory: ./frontend
+
+      - name: npm build
+        run: npm run build -if-present
+        working-directory: ./frontend
+        env:
+          REACT_APP_IMP_CODE: ${{ secrets.REACT_APP_IMP_CODE }}
+          REACT_APP_SERVER_URL: ${{ secrets.REACT_APP_SERVER_URL }}
+
+      - name: npm test
+        run: npm test
+        working-directory: ./frontend
+
+      - name: Zip Build File
+        if: github.event_name == 'push'
+        run: zip -q -r ../frontend.zip build appspec.yml
+        working-directory: ./frontend
+
+      - name: Upload Zip File to Artifact
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend.zip
+          path: frontend.zip
