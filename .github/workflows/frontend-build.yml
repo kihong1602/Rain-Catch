@@ -38,9 +38,9 @@ jobs:
           REACT_APP_IMP_CODE: ${{ secrets.REACT_APP_IMP_CODE }}
           REACT_APP_SERVER_URL: ${{ secrets.REACT_APP_SERVER_URL }}
 
-      - name: npm test
-        run: npm test
-        working-directory: ./frontend
+#      - name: npm test
+#        run: npm test        # 테스트 코드 작성후 추가
+#        working-directory: ./frontend
 
       - name: Zip Build File
         if: github.event_name == 'push'
