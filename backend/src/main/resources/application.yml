@@ -124,6 +124,14 @@ spring:
     redis:
       host: localhost
       port: 6379
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+          kakao:
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
 login:
   redirect-url: http://localhost:3000/login-success
 ---
