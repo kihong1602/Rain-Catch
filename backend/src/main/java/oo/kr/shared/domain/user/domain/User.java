@@ -46,6 +46,10 @@ public class User extends BaseEntity {
     this.providerType = ProviderType.find(providerType);
   }
 
+  public void addOAuth2UserPassword(String password) {
+    this.password = password;
+  }
+
   public String getRoleKey() {
     return role.getKey();
   }
