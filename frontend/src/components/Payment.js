@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import {useCallback, useEffect, useState} from "react";
 import {usePortOne} from "../modules/usePortOne";
-import {SERVER_URL} from "../ServerUrl";
 import customAxios from "../modules/Axios_interceptor";
 import {JWTParser} from "../modules/JWTParser";
 import {useNavigate, useParams} from "react-router-dom";
@@ -19,7 +18,7 @@ function Payment({overdueAmount}) {
     const data = {
       amount: amount
     };
-    customAxios.post(`${SERVER_URL}/payments/pre-registration`, data)
+    customAxios.post(`/api/payments/pre-registration`, data)
     .then(response => response.data)
     .then(data => {
       setMerchantUid(data.merchant_uid);
@@ -74,7 +73,7 @@ function Payment({overdueAmount}) {
     });
 
     const validatePayment = (data) => {
-      return customAxios.post(`${SERVER_URL}/payments/validation`, data)
+      return customAxios.post(`/api/payments/validation`, data)
       .then(response => response.data)
       .catch(error => {
         console.error(error);
@@ -83,7 +82,7 @@ function Payment({overdueAmount}) {
     }
 
     const savePayment = (data) => {
-      customAxios.post(`${SERVER_URL}/rentals/umbrellas/${params.id}`, data)
+      customAxios.post(`/api/rentals/umbrellas/${params.id}`, data)
       .then(() => {
         navigate('/payments/success')
       })
