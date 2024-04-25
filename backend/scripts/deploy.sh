@@ -20,7 +20,7 @@ then
   echo "> Application Not Found: 종료할 어플리케이션이 없습니다."
 else
   echo "> Stop Application: 실행중인 어플리케이션을 종료합니다. $CURRENT_PID"
-  kill -SIGTERM "$CURRENT_PID"
+  kill -15 "$CURRENT_PID"
   sleep 5
 fi
 

@@ -87,6 +87,8 @@ public class SecurityConfig {
         .requestMatchers(PathRequest.toStaticResources()
                                     .atCommonLocations())
         .permitAll()
+        .requestMatchers("/api/login/**")
+        .permitAll()
         .requestMatchers("/api/accounts/**")
         .permitAll()
         .requestMatchers(HttpMethod.GET, "/api/rentals/umbrellas/**")
