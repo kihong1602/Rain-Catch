@@ -91,11 +91,11 @@ spring:
       client:
         registration:
           google:
-            redirect-uri: http://3.34.79.134/api/login/oauth2/code/google
+            redirect-uri: http://raincatch.site/api/login/oauth2/code/google
           kakao:
-            redirect-uri: http://3.34.79.134/api/login/oauth2/code/kakao
+            redirect-uri: http://raincatch.site/api/login/oauth2/code/kakao
 login:
-  redirect-url: http://3.34.79.134/login-success
+  redirect-url: http://raincatch.site/login-success
 ---
 spring:
   config:
