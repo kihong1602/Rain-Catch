@@ -11,7 +11,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {SERVER_URL} from "../ServerUrl";
 import customAxios from "../modules/Axios_interceptor";
 import {useNavigate} from "react-router-dom";
 
@@ -53,7 +52,7 @@ function SignUp() {
   }
 
   const checkEmail = () => {
-    customAxios.get(SERVER_URL + '/accounts/duplicate', {
+    customAxios.get(`/api/accounts/duplicate`, {
       params: {
         email: email
       }
@@ -86,7 +85,7 @@ function SignUp() {
       password: password
     };
 
-    customAxios.post(SERVER_URL + '/accounts/signup', signUpInfo)
+    customAxios.post(`/api/accounts/signup`, signUpInfo)
     .then(response => response.data)
     .then(data => {
       if (data.result === 'SUCCESS') {

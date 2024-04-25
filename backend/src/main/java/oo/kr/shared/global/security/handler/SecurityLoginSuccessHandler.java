@@ -11,6 +11,7 @@ import oo.kr.shared.global.security.auth.PrincipalDetails;
 import oo.kr.shared.global.security.auth.SecurityUserInfo;
 import oo.kr.shared.global.security.jwt.GeneratedToken;
 import oo.kr.shared.global.security.jwt.JwtProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,8 @@ public class SecurityLoginSuccessHandler implements AuthenticationSuccessHandler
 
   private final JwtProvider jwtProvider;
   private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+  @Value("${login.redirect-url}")
+  private String redirectUrl;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -49,7 +52,7 @@ public class SecurityLoginSuccessHandler implements AuthenticationSuccessHandler
   private void oAuth2LoginSuccessProcess(HttpServletRequest request, HttpServletResponse response,
       GeneratedToken generatedToken)
       throws IOException {
-    String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/login-success")
+    String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
                                            .queryParam("accessToken", generatedToken.accessToken())
                                            .build()
                                            .encode(StandardCharsets.UTF_8)

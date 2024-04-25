@@ -1,9 +1,6 @@
-import {SERVER_URL} from "../ServerUrl";
 import axios from "axios";
 
-const customAxios = axios.create({
-  baseURL: SERVER_URL // SERVER_URL = http://localhost:8080/api
-});
+const customAxios = axios.create();
 
 const tokenFreeEndPoints = [
   {pattern: /^\/api\/accounts\/duplicate$/, method: 'GET'},
@@ -17,10 +14,9 @@ const tokenFreeEndPoints = [
 customAxios.interceptors.request.use(
     request => {
       let isRequiredToken = true;
-      const requestUrl = new URL(request.url, `${SERVER_URL}`).pathname;
       const requestMethod = request.method.toUpperCase();
       tokenFreeEndPoints.forEach(({pattern, method}) => {
-        if (pattern.test(requestUrl) && method === requestMethod) {
+        if (pattern.test(request.url) && method === requestMethod) {
           isRequiredToken = false;
         }
       })

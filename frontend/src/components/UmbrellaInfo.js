@@ -1,4 +1,3 @@
-import {SERVER_URL} from "../ServerUrl";
 import customAxios from "../modules/Axios_interceptor";
 import {useNavigate, useParams} from "react-router-dom";
 import {useCallback, useEffect, useState} from "react";
@@ -31,7 +30,7 @@ function UmbrellaInfo() {
   });
 
   const getUmbrellaInfo = useCallback(() => {
-    customAxios.get(SERVER_URL + `/rentals/umbrellas/${params.id}`)
+    customAxios.get(`/api/rentals/umbrellas/${params.id}`)
     .then(response => setInfo(response.data))
     .catch(error => console.error(error));
   }, [params.id]);
@@ -41,7 +40,7 @@ function UmbrellaInfo() {
   }, [getUmbrellaInfo]);
 
   const onClickButton = () => {
-    customAxios.get(`${SERVER_URL}/rentals/umbrellas/current`)
+    customAxios.get(`/api/rentals/umbrellas/current`)
     .then(response => {
       const data = response.data;
       let result = data.result;

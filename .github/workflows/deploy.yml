@@ -15,7 +15,9 @@ on:
         required: true
       AWS_CODE_DEPLOY_APP:
         required: true
-      AWS_CODE_DEPLOY_GROUP:
+      AWS_CODE_DEPLOY_BACK_GROUP:
+        required: true
+      AWS_CODE_DEPLOY_FRONT_GROUP:
         required: true
       AWS_CODE_DEPLOY_CONFIG:
         required: true
@@ -48,15 +50,27 @@ jobs:
           ARTIFACT_PATH: ${{ inputs.path }}
           ZIP_PATH: ${{ inputs.path }}.zip
 
+      - name: Set Deployment Group
+        run: |
+          if [[ "$ARTIFACT_PATH" == "backend" ]]; then
+            echo "DEPLOY_GROUP=$BACK_GROUP" >> $GITHUB_ENV
+          else
+            echo "DEPLOY_GROUP=$FRONT_GROUP" >> $GITHUB_ENV
+          fi
+        env:
+          ARTIFACT_PATH: ${{ inputs.path }}
+          BACK_GROUP: ${{ secrets.AWS_CODE_DEPLOY_BACK_GROUP }}
+          FRONT_GROUP: ${{ secrets.AWS_CODE_DEPLOY_FRONT_GROUP }}
+
+
       - name: Code Deploy To EC2 instance
         run: aws deploy create-deployment
           --application-name $AWS_CODE_DEPLOY_APP
           --deployment-config-name $AWS_CODE_DEPLOY_CONFIG
-          --deployment-group-name $AWS_CODE_DEPLOY_GROUP
+          --deployment-group-name $DEPLOY_GROUP
           --s3-location bucket=$AWS_BUCKET_TO_DEPLOY,bundleType=zip,key=$ARTIFACT_PATH/$GITHUB_SHA.zip
         env:
           AWS_BUCKET_TO_DEPLOY: ${{ secrets.AWS_BUCKET_TO_DEPLOY }}
           AWS_CODE_DEPLOY_APP: ${{ secrets.AWS_CODE_DEPLOY_APP }}
           AWS_CODE_DEPLOY_CONFIG: ${{ secrets.AWS_CODE_DEPLOY_CONFIG }}
-          AWS_CODE_DEPLOY_GROUP: ${{ secrets.AWS_CODE_DEPLOY_GROUP }}
           ARTIFACT_PATH: ${{ inputs.path }}
