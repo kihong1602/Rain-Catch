@@ -4,12 +4,13 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.rentalstation.controller.request.SaveStationInfo;
 import oo.kr.shared.domain.rentalstation.controller.response.NearRentalStation;
+import oo.kr.shared.domain.rentalstation.controller.response.RentalStationInfo;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
 import oo.kr.shared.domain.rentalstation.domain.repository.RentalStationRepository;
-import oo.kr.shared.global.type.Direction;
+import oo.kr.shared.global.exception.type.entity.EntityNotFoundException;
 import oo.kr.shared.global.type.Location;
-import oo.kr.shared.global.utils.GeometryUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -17,23 +18,21 @@ public class StationService {
 
   private final RentalStationRepository rentalStationRepository;
 
-  public NearRentalStation findNearStation(Location location) {
-    Double distance = 0.5;
-    Location northEast = GeometryUtil
-        .calculate(location.latitude(), location.longitude(), distance, Direction.NORTHEAST.getBearing());
-    Location southWest = GeometryUtil
-        .calculate(location.latitude(), location.longitude(), distance, Direction.SOUTHWEST.getBearing());
-
-    double x1 = northEast.latitude();
-    double y1 = northEast.longitude();
-    double x2 = southWest.latitude();
-    double y2 = southWest.longitude();
-
-    String point = String.format("LINESTRING(%f %f, %f %f)", x1, y1, x2, y2);
-    List<RentalStation> nearStations = rentalStationRepository.findNearDistance(point);
-    return NearRentalStation.of(nearStations);
+  @Transactional(readOnly = true)
+  public RentalStationInfo findStationInfo(Long id) {
+    RentalStation rentalStation = rentalStationRepository.findRentalStationInfo(id)
+                                                         .orElseThrow(EntityNotFoundException::new);
+    return RentalStationInfo.create(rentalStation);
   }
 
+  @Transactional(readOnly = true)
+  public NearRentalStation findNearStation(Location location) {
+    List<RentalStation> nearRentalStation = rentalStationRepository.findNearRentalStation(location.latitude(),
+        location.longitude());
+    return NearRentalStation.of(nearRentalStation);
+  }
+
+  @Transactional
   public void saveStation(SaveStationInfo stationInfo) {
     RentalStation rentalStation = stationInfo.toEntity();
     rentalStationRepository.save(rentalStation);

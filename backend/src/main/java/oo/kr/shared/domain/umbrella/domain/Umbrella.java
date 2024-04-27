@@ -36,7 +36,4 @@ public class Umbrella extends BaseEntity {
     currentStation = rentalStation;
   }
 
-  public void changeStatus(UmbrellaStatus status) {
-    umbrellaStatus = status;
-  }
 }

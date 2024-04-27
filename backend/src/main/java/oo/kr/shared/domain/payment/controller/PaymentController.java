@@ -6,6 +6,8 @@ import oo.kr.shared.domain.payment.controller.request.RequiredPaymentData;
 import oo.kr.shared.domain.payment.service.PaymentService;
 import oo.kr.shared.global.portone.PreRegisterPaymentData;
 import oo.kr.shared.global.portone.SinglePaymentInfo;
+import oo.kr.shared.global.type.ResponseType;
+import oo.kr.shared.global.type.SimpleResponse;
 import oo.kr.shared.global.utils.SecurityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,4 +40,15 @@ public class PaymentController {
     SinglePaymentInfo singlePaymentInfo = paymentService.validatePayment(paymentData);
     return ResponseEntity.ok(singlePaymentInfo);
   }
+
+  /**
+   * 결제내역 저장 API <br/> 우산대여가 아닌, 연체금액 결제시 사용
+   */
+  @PostMapping
+  public ResponseEntity<SimpleResponse> saveOverDuePayment(@RequestBody RequiredPaymentData paymentData) {
+    String email = SecurityUtils.getAuthenticationPrincipal();
+    paymentService.saveOverDuePayment(paymentData, email);
+    return ResponseEntity.ok(new SimpleResponse(ResponseType.SUCCESS));
+  }
+
 }

@@ -2,8 +2,6 @@ package oo.kr.shared.domain.rentalrecord.controller;
 
 import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.payment.controller.request.RequiredPaymentData;
-import oo.kr.shared.domain.rentalrecord.controller.request.ReturnUmbrellaInfo;
-import oo.kr.shared.domain.rentalrecord.controller.response.OverDueCheck;
 import oo.kr.shared.domain.rentalrecord.controller.response.UmbrellaInfo;
 import oo.kr.shared.domain.rentalrecord.service.RentalService;
 import oo.kr.shared.global.type.ResponseType;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,17 +53,4 @@ public class RentalController {
     return ResponseEntity.ok("SUCCESS");
   }
 
-  @GetMapping("/rental/umbrella/overdue")
-  public ResponseEntity<OverDueCheck> returnTimeCheck() {
-    String email = SecurityUtils.getAuthenticationPrincipal();
-    OverDueCheck overDueCheck = rentalService.overdueCheck(email);
-    return ResponseEntity.ok(overDueCheck);
-  }
-
-  @PutMapping("/rental/umbrella/return")
-  public ResponseEntity<SimpleResponse> returnUmbrella(@RequestBody ReturnUmbrellaInfo returnUmbrellaInfo) {
-    String email = SecurityUtils.getAuthenticationPrincipal();
-    rentalService.returnUmbrella(returnUmbrellaInfo, email);
-    return ResponseEntity.ok(new SimpleResponse(ResponseType.SUCCESS));
-  }
 }
