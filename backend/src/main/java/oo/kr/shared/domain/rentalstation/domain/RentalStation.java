@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import oo.kr.shared.domain.rentalstation.controller.request.EditStationInfo;
 import oo.kr.shared.domain.umbrella.domain.Umbrella;
 import oo.kr.shared.global.type.BaseEntity;
 
@@ -29,6 +30,9 @@ public class RentalStation extends BaseEntity {
   @Column(nullable = false)
   private Double longitude;
 
+  @Column(nullable = false)
+  private Boolean active = Boolean.TRUE;
+
   @OneToMany(mappedBy = "currentStation", fetch = FetchType.LAZY)
   private List<Umbrella> availableUmbrellas = new ArrayList<>();
 
@@ -39,4 +43,14 @@ public class RentalStation extends BaseEntity {
     this.longitude = longitude;
   }
 
+  public void edit(EditStationInfo editStationInfo) {
+    this.name = editStationInfo.name();
+    this.address = editStationInfo.address();
+    this.latitude = editStationInfo.latitude();
+    this.longitude = editStationInfo.longitude();
+  }
+
+  public void remove() {
+    this.active = Boolean.FALSE;
+  }
 }

@@ -2,6 +2,7 @@ package oo.kr.shared.domain.rentalstation.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import oo.kr.shared.domain.rentalstation.controller.request.EditStationInfo;
 import oo.kr.shared.domain.rentalstation.controller.request.SaveStationInfo;
 import oo.kr.shared.domain.rentalstation.controller.response.NearRentalStation;
 import oo.kr.shared.domain.rentalstation.controller.response.RentalStationInfo;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class StationService {
+public class RentalStationService {
 
   private final RentalStationRepository rentalStationRepository;
 
@@ -38,4 +39,22 @@ public class StationService {
     rentalStationRepository.save(rentalStation);
   }
 
+  @Transactional
+  public void editStation(Long id, EditStationInfo editStationInfo) {
+    RentalStation rentalStation = getRentalStation(id);
+    rentalStation.edit(editStationInfo);
+    rentalStationRepository.save(rentalStation);
+  }
+
+  @Transactional
+  public void removeStation(Long id) {
+    RentalStation rentalStation = getRentalStation(id);
+    rentalStation.remove();
+    rentalStationRepository.save(rentalStation);
+  }
+
+  private RentalStation getRentalStation(Long id) {
+    return rentalStationRepository.findById(id)
+                                  .orElseThrow(EntityNotFoundException::new);
+  }
 }

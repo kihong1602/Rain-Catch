@@ -19,13 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class StationServiceTest {
+class RentalStationServiceTest {
 
   @Autowired
   private RentalStationRepository rentalStationRepository;
 
   @Autowired
-  private StationService stationService;
+  private RentalStationService rentalStationService;
 
   @BeforeEach
   void init() {
@@ -44,7 +44,7 @@ class StationServiceTest {
     Location location = new Location(37.608228287698275, 126.92243283200172);
 
     //when
-    NearRentalStation nearestStation = stationService.findNearStation(location);
+    NearRentalStation nearestStation = rentalStationService.findNearStation(location);
 
     //then
     assertThat(nearestStation.rentalStationDataList()).hasSize(3)
