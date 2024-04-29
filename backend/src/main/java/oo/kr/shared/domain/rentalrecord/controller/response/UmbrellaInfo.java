@@ -5,7 +5,6 @@ import java.util.Optional;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
 import oo.kr.shared.domain.umbrella.domain.Umbrella;
 import oo.kr.shared.domain.umbrella.domain.UmbrellaStatus;
-import org.locationtech.jts.geom.Point;
 
 public record UmbrellaInfo(
     @JsonProperty("umbrella_data")
@@ -41,8 +40,7 @@ public record UmbrellaInfo(
   ) {
 
     private static RentalStationData create(RentalStation rentalStation) {
-      Point point = rentalStation.getPoint();
-      return new RentalStationData(rentalStation.getName(), point.getX(), point.getY());
+      return new RentalStationData(rentalStation.getName(), rentalStation.getLongitude(), rentalStation.getLatitude());
     }
   }
 }

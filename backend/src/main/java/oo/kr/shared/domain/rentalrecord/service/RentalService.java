@@ -1,20 +1,15 @@
 package oo.kr.shared.domain.rentalrecord.service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.payment.controller.request.RequiredPaymentData;
 import oo.kr.shared.domain.payment.domain.Payment;
 import oo.kr.shared.domain.payment.domain.repository.PaymentRepository;
-import oo.kr.shared.domain.rentalrecord.controller.request.ReturnUmbrellaInfo;
-import oo.kr.shared.domain.rentalrecord.controller.response.OverDueCheck;
 import oo.kr.shared.domain.rentalrecord.controller.response.UmbrellaInfo;
 import oo.kr.shared.domain.rentalrecord.domain.RentalRecord;
 import oo.kr.shared.domain.rentalrecord.domain.RentalStatus;
 import oo.kr.shared.domain.rentalrecord.domain.repository.RentalRecordRepository;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
-import oo.kr.shared.domain.rentalstation.domain.repository.RentalStationRepository;
 import oo.kr.shared.domain.umbrella.domain.Umbrella;
 import oo.kr.shared.domain.umbrella.domain.repository.UmbrellaRepository;
 import oo.kr.shared.domain.user.domain.User;
@@ -29,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RentalService {
 
   private final RentalRecordRepository rentalRecordRepository;
-  private final RentalStationRepository rentalStationRepository;
   private final PaymentRepository paymentRepository;
   private final UmbrellaRepository umbrellaRepository;
   private final UserRepository userRepository;
@@ -56,11 +50,6 @@ public class RentalService {
     return UmbrellaInfo.create(umbrella);
   }
 
-  private Umbrella getUmbrella(Long umbrellaId) {
-    return umbrellaRepository.findByUmbrellaId(umbrellaId)
-                             .orElseThrow(EntityNotFoundException::new);
-  }
-
   @Transactional(readOnly = true)
   public boolean findCurrentRentalByUser(String email) {
     RentalRecord recentRentalRecord = rentalRecordRepository.findRecentRentalRecordByEmail(email);
@@ -75,30 +64,9 @@ public class RentalService {
     }
   }
 
-  @Transactional(readOnly = true)
-  public OverDueCheck overdueCheck(String email) {
-    RentalRecord rentalRecord = getRentalRecord(email);
-    LocalDateTime expectedReturnTime = rentalRecord.getExpectedReturnTime();
-    LocalDateTime now = LocalDateTime.now();
-    long minutesDiff = Duration.between(expectedReturnTime, now)
-                               .toMinutes();
-    long additionalCharge = 0L;
-    if (minutesDiff > 0) {
-      double chargePeriods = Math.ceil((double) minutesDiff / 10);
-      additionalCharge = (long) chargePeriods * 100;
-    }
-    return OverDueCheck.create(minutesDiff, additionalCharge);
-  }
-
-  @Transactional
-  public void returnUmbrella(ReturnUmbrellaInfo returnUmbrellaInfo, String email) {
-    RentalRecord rentalRecord = getRentalRecord(email);
-    RentalStation rentalStation = rentalStationRepository.findById(returnUmbrellaInfo.stationId())
-                                                         .orElseThrow(EntityNotFoundException::new);
-    rentalRecord.returnUmbrella(rentalStation, returnUmbrellaInfo.returnTime());
-    rentalRecord.getUmbrella()
-                .returnToStation(rentalStation);
-    rentalRecordRepository.save(rentalRecord);
+  private Umbrella getUmbrella(Long umbrellaId) {
+    return umbrellaRepository.findByUmbrellaId(umbrellaId)
+                             .orElseThrow(EntityNotFoundException::new);
   }
 
   private Payment savePayment(RequiredPaymentData paymentData, User user) {
@@ -106,14 +74,4 @@ public class RentalService {
     return paymentRepository.save(payment);
   }
 
-  private Payment getLastPayment(String email) {
-    Payment payments = paymentRepository.findLastPaymentByEmail(email);
-    return Objects.requireNonNull(payments);
-  }
-
-  private RentalRecord getRentalRecord(String email) {
-    Payment lastPayment = getLastPayment(email);
-    return rentalRecordRepository.findByUmbrellaIdAndPaymentId(lastPayment.getId())
-                                 .orElseThrow(EntityNotFoundException::new);
-  }
 }

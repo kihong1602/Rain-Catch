@@ -13,7 +13,7 @@ ERROR_LOG="$DEV_DIR/log/error.log"
 sudo chmod -R u+rwx $DEV_DIR # 현재 실행중인 스크립트에게 지정된 경로부터 하위 디렉토리까지 재귀적으로 root 권한 부여
 
 ## Stop Application
-CURRENT_PID=$(pgrep -f $APP_NAME)
+CURRENT_PID=$(lsof -t -i:8080)
 
 if [ -z "$CURRENT_PID" ]
 then
@@ -21,7 +21,7 @@ then
 else
   echo "> Stop Application: 실행중인 어플리케이션을 종료합니다. $CURRENT_PID"
   kill -15 "$CURRENT_PID"
-  sleep 5
+  wait "$CURRENT_PID" 2>/dev/null
 fi
 
 ## Start Application

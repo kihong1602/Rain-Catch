@@ -20,11 +20,20 @@ public class Umbrella extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private UmbrellaStatus umbrellaStatus;
+  private UmbrellaStatus umbrellaStatus = UmbrellaStatus.WAIT;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "current_station")
   private RentalStation currentStation;
+
+  public static Umbrella create() {
+    return new Umbrella();
+  }
+
+  public void changeStatus(UmbrellaStatus umbrellaStatus) {
+    this.umbrellaStatus = umbrellaStatus;
+  }
+
 
   public void rent() {
     umbrellaStatus = UmbrellaStatus.RENTED;
@@ -36,7 +45,4 @@ public class Umbrella extends BaseEntity {
     currentStation = rentalStation;
   }
 
-  public void changeStatus(UmbrellaStatus status) {
-    umbrellaStatus = status;
-  }
 }
