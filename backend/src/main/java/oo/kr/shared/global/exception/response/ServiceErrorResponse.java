@@ -2,7 +2,7 @@ package oo.kr.shared.global.exception.response;
 
 import java.util.Objects;
 import lombok.Getter;
-import oo.kr.shared.global.exception.type.ProjectException;
+import oo.kr.shared.global.exception.type.RainCatchException;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -15,7 +15,7 @@ public class ServiceErrorResponse extends ErrorResponse {
     this.errorDetail = errorDetail;
   }
 
-  public static ServiceErrorResponse create(ProjectException ex) {
+  public static ServiceErrorResponse create(RainCatchException ex) {
     ErrorDetail errorDetail = Objects.requireNonNullElse(ex.getErrorDetail(), new ErrorDetail(""));
     return new ServiceErrorResponse(ex.getHttpStatus(), errorDetail);
   }

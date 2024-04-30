@@ -7,6 +7,7 @@ import oo.kr.shared.domain.payment.domain.Payment;
 import oo.kr.shared.domain.payment.domain.repository.PaymentRepository;
 import oo.kr.shared.domain.user.domain.User;
 import oo.kr.shared.domain.user.domain.repository.UserRepository;
+import oo.kr.shared.global.exception.type.payment.PaymentValidationException;
 import oo.kr.shared.global.portone.PaymentClient;
 import oo.kr.shared.global.portone.PreRegisterPaymentData;
 import oo.kr.shared.global.portone.SinglePaymentInfo;
@@ -32,7 +33,7 @@ public class PaymentService {
     SinglePaymentInfo singlePaymentInfo = paymentClient.findSinglePaymentInfo(paymentData.impUid());
     boolean valid = singlePaymentInfo.isEquals(paymentData);
     if (!valid) {
-      throw new RuntimeException();
+      throw new PaymentValidationException();
     }
     return singlePaymentInfo;
   }

@@ -1,145 +1,7 @@
 spring:
   profiles:
     active: prod
-    group:
-      local:
-        - common
-      prod:
-        - common
-      test:
-        - common
 
----
-# local
-spring:
-  config:
-    activate:
-      on-profile: local
-
-  datasource:
-    hikari:
-      master:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: ${LOCAL_MASTER_URL}
-        username: ${LOCAL_MASTER_USERNAME}
-        password: ${LOCAL_MASTER_PASSWORD}
-      slave:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: ${LOCAL_SLAVE_URL}
-        username: ${LOCAL_SLAVE_USERNAME}
-        password: ${LOCAL_SLAVE_PASSWORD}
-
-  data:
-    redis:
-      host: ${LOCAL_REDIS_HOST}
-      port: ${LOCAL_REDIS_PORT}
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        highlight_sql: true
-        show_sql: true
-        connection:
-          characterEncoding: utf-8
-          useUnicode: true
-          CharSet: utf-8
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
-          kakao:
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
-login:
-  redirect-url: http://localhost/login-success
----
-# prod
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${PROD_MYSQL_URL}
-    username: ${PROD_MYSQL_USERNAME}
-    password: ${PROD_MYSQL_PASSWORD}
-
-  data:
-    redis:
-      host: ${PROD_REDIS_HOST}
-      port: ${PROD_REDIS_PORT}
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        highlight_sql: true
-        show_sql: true
-        connection:
-          characterEncoding: utf-8
-          useUnicode: true
-          CharSet: utf-8
-    open-in-view: false
-
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: http://raincatch.site/login/oauth2/code/google
-          kakao:
-            redirect-uri: http://raincatch.site/login/oauth2/code/kakao
-login:
-  redirect-url: http://raincatch.site/login-success
----
-spring:
-  config:
-    activate:
-      on-profile: test
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  jpa:
-    database: h2
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=USER
-    username: sa
-    password:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
-          kakao:
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
-login:
-  redirect-url: http://localhost/login-success
----
-# common
-spring:
-  config:
-    activate:
-      on-profile: common
   security:
     oauth2:
       client:
@@ -180,3 +42,23 @@ network:
 port-one:
   imp-key: ${IMP_KEY}
   imp-secret: ${IMP_SECRET}
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        record-exceptions:
+          - oo.kr.shared.global.exception.type.payment.APIServerErrorException
+          - oo.kr.shared.global.exception.type.payment.APIResponseNotFoundException
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 100
+        slow-call-duration-threshold:
+          seconds: 6
+        sliding-window-type: count_based
+        sliding-window-size: 10
+        wait-duration-in-open-state:
+          seconds: 5
+    instances:
+      PaymentClient:
+        register-health-indicator: true
+        base-config: default
