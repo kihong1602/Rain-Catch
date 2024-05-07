@@ -1,9 +1,11 @@
 package oo.kr.shared.global.exception.handler;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import oo.kr.shared.global.exception.response.ErrorResponse;
+import oo.kr.shared.global.exception.response.ExternalAPIErrorResponse;
 import oo.kr.shared.global.exception.response.ServiceErrorResponse;
 import oo.kr.shared.global.exception.response.ValidationErrorResponse;
-import oo.kr.shared.global.exception.type.ProjectException;
+import oo.kr.shared.global.exception.type.RainCatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,18 +15,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler({ProjectException.class, MethodArgumentNotValidException.class})
-  public ResponseEntity<ErrorResponse> handleServiceAndValidateException(Exception ex) {
-    ErrorResponse response = createErrorResponse(ex);
-    return ResponseEntity.status(response.getHttpStatus())
-                         .body(response);
+  @ExceptionHandler({RainCatchException.class})
+  public ResponseEntity<ErrorResponse> handleServiceAndValidateException(RainCatchException ex) {
+    ErrorResponse response = ServiceErrorResponse.create(ex);
+    return ResponseEntity.status(response.getHttpStatus()).body(response);
   }
 
-  private ErrorResponse createErrorResponse(Exception ex) {
-    if (ex instanceof MethodArgumentNotValidException validException) {
-      return ValidationErrorResponse.create(HttpStatus.BAD_REQUEST, validException.getBindingResult());
-    } else {
-      return ServiceErrorResponse.create((ProjectException) ex);
-    }
+  @ExceptionHandler({MethodArgumentNotValidException.class})
+  public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    ErrorResponse response = ValidationErrorResponse.create(HttpStatus.BAD_REQUEST,
+        ex.getBindingResult());
+    return ResponseEntity.status(response.getHttpStatus()).body(response);
+  }
+
+  @ExceptionHandler({CallNotPermittedException.class})
+  public ResponseEntity<ErrorResponse> handleCircuitBreakerException(CallNotPermittedException ex) {
+    ErrorResponse response = ExternalAPIErrorResponse.create(HttpStatus.SERVICE_UNAVAILABLE,
+        "결제서버에 장애가 발생하였습니다.");
+    return ResponseEntity.status(response.getHttpStatus()).body(response);
   }
 }

@@ -4,28 +4,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
-import oo.kr.shared.domain.rentalstation.controller.response.NearRentalStation;
 import oo.kr.shared.domain.rentalstation.domain.RentalStation;
 import oo.kr.shared.domain.rentalstation.domain.repository.RentalStationRepository;
+import oo.kr.shared.global.TestQueryDslConfig;
 import oo.kr.shared.global.type.Location;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
+@DataJpaTest
 @ActiveProfiles("test")
+@Import(TestQueryDslConfig.class)
 @Transactional
 class RentalStationServiceTest {
 
   @Autowired
   private RentalStationRepository rentalStationRepository;
-
-  @Autowired
-  private RentalStationService rentalStationService;
 
   @BeforeEach
   void init() {
@@ -44,15 +43,16 @@ class RentalStationServiceTest {
     Location location = new Location(37.608228287698275, 126.92243283200172);
 
     //when
-    NearRentalStation nearestStation = rentalStationService.findNearStation(location);
+    List<RentalStation> nearRentalStation = rentalStationRepository.findNearRentalStation(location.latitude(),
+        location.longitude());
 
     //then
-    assertThat(nearestStation.rentalStationDataList()).hasSize(3)
-                                                      .extracting("name", "address")
-                                                      .containsExactly(
-                                                          tuple("삼성타운아파트", "서울특별시 은평구 서오릉로94"),
-                                                          tuple("아이&유안경콘택트", "서울특별시 은평구 서오릉로 93"),
-                                                          tuple("컴포즈커피 역촌중앙점", "서울 은평구 서오릉로 86")
-                                                      );
+    assertThat(nearRentalStation).hasSize(3)
+                                 .extracting("name", "address")
+                                 .containsExactly(
+                                     tuple("삼성타운아파트", "서울특별시 은평구 서오릉로94"),
+                                     tuple("아이&유안경콘택트", "서울특별시 은평구 서오릉로 93"),
+                                     tuple("컴포즈커피 역촌중앙점", "서울 은평구 서오릉로 86")
+                                 );
   }
 }

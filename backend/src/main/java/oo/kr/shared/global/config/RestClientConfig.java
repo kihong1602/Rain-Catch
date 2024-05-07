@@ -1,5 +1,7 @@
 package oo.kr.shared.global.config;
 
+import lombok.RequiredArgsConstructor;
+import oo.kr.shared.global.exception.handler.PaymentClientErrorHandler;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -16,8 +18,10 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
 @Configuration
+@RequiredArgsConstructor
 public class RestClientConfig {
 
+  private final PaymentClientErrorHandler errorHandler;
   @Value("${network.timeout.connect}")
   private int connectTimeout;
   @Value("${network.timeout.socket}")
@@ -32,6 +36,7 @@ public class RestClientConfig {
     return RestClient.builder()
                      .baseUrl("https://api.iamport.kr")
                      .requestFactory(httpRequestFactory())
+                     .defaultStatusHandler(errorHandler)
                      .build();
   }
 

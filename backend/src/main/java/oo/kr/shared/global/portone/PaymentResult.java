@@ -1,5 +1,7 @@
 package oo.kr.shared.global.portone;
 
+import oo.kr.shared.global.exception.type.payment.PaymentValidationException;
+
 public record PaymentResult(
     Integer code,
     String message,
@@ -12,8 +14,7 @@ public record PaymentResult(
     if (isSuccess()) {
       return response;
     }
-    // 실패한 이유가 message에 담김. 해당 예외 추가 설정
-    throw new RuntimeException(message);
+    throw new PaymentValidationException(message);
   }
 
   private boolean isSuccess() {
