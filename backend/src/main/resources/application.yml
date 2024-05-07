@@ -50,6 +50,7 @@ resilience4j:
         record-exceptions:
           - oo.kr.shared.global.exception.type.payment.APIServerErrorException
           - oo.kr.shared.global.exception.type.payment.APIResponseNotFoundException
+          - org.springframework.web.client.RestClientException
         failure-rate-threshold: 50
         slow-call-rate-threshold: 100
         slow-call-duration-threshold:
