@@ -39,7 +39,40 @@
 ![RainCatch_ERD](readme/image/erd/erd.png)
 
 ## 📂 패키지 구조
-
+```text
+RainCatch
+    ├─.github
+    │    └─workflows
+    │
+    ├─frontend
+    │     ├─build/...
+    │     ├─public/...
+    │     └─src
+    │        ├─components/...
+    │        └─modules/...
+    │
+    ├─backend
+    │    └─src
+    │       ├─main/java/oo/kr/shared
+    │       │             ├─domain
+    │       │             │    └─api
+    │       │             │       ├─controller
+    │       │             │       │     ├─request
+    │       │             │       │     └─response
+    │       │             │       ├─domain
+    │       │             │       │     ├─entity
+    │       │             │       │     └─repository
+    │       │             │       └─service
+    │       │             │
+    │       │             └─global
+    │       │                 ├─config
+    │       │                 ├─exception
+    │       │                 ├─security
+    │       │                 ├─utils
+    │       │                 └─ ...
+    │       └─test/...
+    └─README.md
+```
 ## 🚀 기술적 경험
 ### GithubActions와 CodeDeploy를 사용한 CI/CD 자동화 파이프라인 구축
 
