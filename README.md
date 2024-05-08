@@ -75,22 +75,22 @@ RainCatch
     └─README.md
 ```
 ## 🚀 기술적 경험
-### GithubActions와 CodeDeploy를 사용한 CI/CD 자동화 파이프라인 구축 [[구성패키지]()]
+### GithubActions와 CodeDeploy를 사용한 CI/CD 자동화 파이프라인 구축 [[구성패키지](https://github.com/kihong1602/Rain-Catch/tree/main/.github/workflows)]
 - build 작업은 pull-request, push 이벤트 시 반복 사용되고, deploy 작업은 frontend, backend push 작업에 반복 사용
 - 중복 코드를 줄이고 재사용성을 높이기위해 GithubActions의 Reusable Workflow로 build, deploy 작업 분리
 
-### JWT기반 인증구조 구현[[구현코드]()/[구성패키지]()]
+### JWT기반 인증구조 구현[[구현코드](https://github.com/kihong1602/Rain-Catch/blob/f9a2534c02407f0db29d9d35686998b9c00938d4/backend/src/main/java/oo/kr/shared/global/security/filter/JwtAuthenticationFilter.java#L25-L72) / [구성패키지](https://github.com/kihong1602/Rain-Catch/tree/main/backend/src/main/java/oo/kr/shared/global/security/jwt)]
 - 세션기반 인증구조는 트래픽이 커질수록 서버 부하가 증가
 - 토큰기반 인증구조를 도입해 인가 요청에 대한 서버 부하 감소
 - 토큰 탈취를 대비해 AccessToken 만료시간을 짧게 설정
   - ReFreshToken을 사용해 AccessToken을 갱신하도록 구성
 
-### 하버사인 공식을 이용한 위치기반 주변 데이터 검색
+### 하버사인 공식을 이용한 위치기반 주변 데이터 검색[[구현코드](https://github.com/kihong1602/Rain-Catch/blob/c504f3ee1474b2285a71da4572fbe57c56a9701b/backend/src/main/java/oo/kr/shared/domain/rentalstation/domain/repository/custom/QRentalStationRepositoryImpl.java#L29-L61)]
 - 프로젝트 초기, MySQL 네이티브 쿼리를 이용해 주변 데이터 검색 로직 구현
   - MySQL에 의존하는 쿼리문으로 인해 DB 변경에 제약사항이 존재
 - 하버사인공식을 직접 QueryDSL로 구현해 DB 변경이나 테스트환경에서도 유연하게 작동하도록 구현
-- 
-### CircuitBreaker 패턴을 통한 외부 API 장애상황 대비
+
+### CircuitBreaker 패턴을 통한 외부 API 장애상황 대비[[구현코드1](https://github.com/kihong1602/Rain-Catch/blob/f9a2534c02407f0db29d9d35686998b9c00938d4/backend/src/main/java/oo/kr/shared/global/portone/PaymentClient.java#L26) / [구현코드2](https://github.com/kihong1602/Rain-Catch/blob/f9a2534c02407f0db29d9d35686998b9c00938d4/backend/src/main/java/oo/kr/shared/global/exception/handler/GlobalExceptionHandler.java#L31-L36) / [설정코드](https://github.com/kihong1602/Rain-Catch/blob/f9a2534c02407f0db29d9d35686998b9c00938d4/backend/src/main/resources/application.yml#L46-L65)]
 - 외부 API 서버 장애발생시 Timeout을 기다림으로 불필요한 자원낭비
 - 서킷브레이커 패턴을 도입해 일정 횟수 이상 에러가 감지된다면 서킷을 열어 빠른 에러 응답
 <details>
