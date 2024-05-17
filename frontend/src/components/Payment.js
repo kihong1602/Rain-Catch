@@ -2,55 +2,59 @@ import Button from "@mui/material/Button";
 import {useCallback, useEffect, useState} from "react";
 import {usePortOne} from "../modules/usePortOne";
 import customAxios from "../modules/Axios_interceptor";
-import {JWTParser} from "../modules/JWTParser";
 import {useNavigate, useParams} from "react-router-dom";
 
 function Payment({overdueAmount}) {
   usePortOne();
   let navigate = useNavigate();
   const params = useParams();
-  const [merchantUid, setMerchantUid] = useState('');
-  const [amount, setAmount] = useState(overdueAmount || 1000);
+  const [paymentInfo, setPaymentInfo] = useState({
+    email: '',
+    merchantUid: '',
+    amount: overdueAmount || 1000
+  });
 
   const isEmpty = useCallback((value) => !value || value.trim() === '', []);
 
   const preRegisterPaymentInfo = useCallback(() => {
     const data = {
-      amount: amount
+      amount: paymentInfo.amount
     };
     customAxios.post(`/api/payments/pre-registration`, data)
     .then(response => response.data)
     .then(data => {
-      setMerchantUid(data.merchant_uid);
-      setAmount(data.amount);
-      sessionStorage.setItem('paymentInfo', JSON.stringify({merchantUid: data.merchant_uid, amount: data.amount}));
+      const paymentData = data.payment_data;
+      const updatePaymentInfo = {
+        email: data.email,
+        merchantUid: paymentData.merchant_uid,
+        amount: paymentData.amount
+      };
+      setPaymentInfo(updatePaymentInfo);
+      sessionStorage.setItem('paymentInfo', JSON.stringify(updatePaymentInfo));
     }).catch(error => console.error(error));
-  }, [amount]);
+  }, [paymentInfo.amount]);
 
   useEffect(() => {
-    const paymentInfo = sessionStorage.getItem('paymentInfo');
-    if (paymentInfo) {
-      const {merchantUid, amount} = JSON.parse(paymentInfo);
-      setMerchantUid(merchantUid);
-      setAmount(amount);
+    const storedPaymentInfo = sessionStorage.getItem('paymentInfo');
+    if (storedPaymentInfo) {
+      setPaymentInfo(JSON.parse(storedPaymentInfo));
     } else {
       preRegisterPaymentInfo();
     }
   }, [overdueAmount, preRegisterPaymentInfo, isEmpty]);
 
   const onClickPay = async () => {
-    const email = JWTParser();
     const {IMP} = window;
     IMP.init(process.env.REACT_APP_IMP_CODE);
-    console.log(`amount :: ${amount}`);
-    console.log(`merchantUid :: ${merchantUid}`);
+    console.log(`amount :: ${paymentInfo.amount}`);
+    console.log(`merchantUid :: ${paymentInfo.merchantUid}`);
     const data = {
       pg: 'tosspayments',
       pay_method: 'toss',
       name: '우산 1일 대여',
-      amount: amount, // 내려온 데이터 입력
-      merchant_uid: merchantUid,
-      buyer_tel: email
+      amount: paymentInfo.amount, // 내려온 데이터 입력
+      merchant_uid: paymentInfo.merchantUid,
+      buyer_tel: paymentInfo.email
     }
 
     IMP.request_pay(data, async res => {
@@ -62,7 +66,7 @@ function Payment({overdueAmount}) {
         const data = {
           imp_uid: impUid,
           merchant_uid: merchantUid,
-          amount: amount
+          amount: paymentInfo.amount
         };
         let validatePaymentInfo = await validatePayment(data);
         savePayment(validatePaymentInfo);

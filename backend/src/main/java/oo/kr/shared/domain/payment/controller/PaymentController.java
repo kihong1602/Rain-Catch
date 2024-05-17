@@ -3,6 +3,7 @@ package oo.kr.shared.domain.payment.controller;
 import lombok.RequiredArgsConstructor;
 import oo.kr.shared.domain.payment.controller.request.RequiredAmount;
 import oo.kr.shared.domain.payment.controller.request.RequiredPaymentData;
+import oo.kr.shared.domain.payment.controller.response.PreRegisterPaymentInfo;
 import oo.kr.shared.domain.payment.service.PaymentService;
 import oo.kr.shared.global.portone.PreRegisterPaymentData;
 import oo.kr.shared.global.portone.SinglePaymentInfo;
@@ -26,10 +27,10 @@ public class PaymentController {
    * 결제금액 사전등록 API
    */
   @PostMapping("/pre-registration")
-  public ResponseEntity<PreRegisterPaymentData> preRegisterPayment(@RequestBody RequiredAmount requiredAmount) {
+  public ResponseEntity<PreRegisterPaymentInfo> preRegisterPayment(@RequestBody RequiredAmount requiredAmount) {
     String email = SecurityUtils.getAuthenticationPrincipal();
     PreRegisterPaymentData preRegisterResult = paymentService.preRegisterPayment(email, requiredAmount.amount());
-    return ResponseEntity.ok(preRegisterResult);
+    return ResponseEntity.ok(new PreRegisterPaymentInfo(email, preRegisterResult));
   }
 
   /**

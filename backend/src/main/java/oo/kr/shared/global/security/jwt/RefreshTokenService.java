@@ -13,24 +13,18 @@ public class RefreshTokenService {
   private final RefreshTokenRepository refreshTokenRepository;
 
   @Transactional
-  public void saveTokenInfo(String email, String refreshToken, String accessToken) {
-    refreshTokenRepository.save(new RefreshToken(email, accessToken, refreshToken));
+  public void saveTokenInfo(String email, String refreshToken) {
+    refreshTokenRepository.save(new RefreshToken(email, refreshToken));
   }
 
   @Transactional
-  public void saveTokenInfo(RefreshToken refreshToken) {
-    refreshTokenRepository.save(refreshToken);
+  public RefreshToken findTokenInfo(String email) {
+    return refreshTokenRepository.findById(email).orElseThrow(ExpiredRefreshTokenException::new);
   }
 
   @Transactional
-  public RefreshToken findTokenInfo(String accessToken) {
-    return refreshTokenRepository.findByAccessToken(accessToken)
-                                 .orElseThrow(ExpiredRefreshTokenException::new);
-  }
-
-  @Transactional
-  public void removeRefreshToken(String accessToken) {
-    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByAccessToken(accessToken);
+  public void removeRefreshToken(String email) {
+    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findById(email);
     if (optionalRefreshToken.isEmpty()) {
       return;
     }

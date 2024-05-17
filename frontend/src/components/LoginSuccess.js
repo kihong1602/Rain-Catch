@@ -7,11 +7,7 @@ function LoginSuccess() {
   const {state} = useLocation();
 
   useEffect(() => {
-    let accessToken = query.get('accessToken');
-    if (accessToken) {
-      sessionStorage.setItem('jwt', accessToken);
-      navigate(state ? state : '/');
-    }
+    navigate(state ? state : '/');
   }, [state, navigate, query]);
 
   return (
