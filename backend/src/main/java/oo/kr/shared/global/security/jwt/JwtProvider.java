@@ -18,27 +18,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
 
   private final long REFRESH_TOKEN_EXPIRED = 1000L * 60 * 60 * 24 * 7; // Refresh Token 유효시간 7일
-  private final long ACCESS_TOKEN_EXPIRED = 1000L * 60 * 30; // Access Token 유효시간 30분
+  private final long ACCESS_TOKEN_EXPIRED = 1000L * 60; // Access Token 유효시간 30분
   private final String AUTHORITIES_KEY = "role";
   private final RefreshTokenService tokenService;
   @Value("${jwt.secret}")
   private String secret;
   private Key key;
-
-  public static String getJwt(String bearerToken) {
-    final String TOKEN_PREFIX = "Bearer ";
-    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-      return bearerToken.replace(TOKEN_PREFIX, "");
-    }
-    return null;
-  }
 
   @PostConstruct
   protected void init() {
@@ -56,21 +47,19 @@ public class JwtProvider {
                                        .collect(Collectors.joining(","));
     String accessToken = createToken(userId, authorities, ACCESS_TOKEN_EXPIRED);
     String refreshToken = createToken(userId, authorities, REFRESH_TOKEN_EXPIRED);
-    tokenService.saveTokenInfo(securityUserInfo.email(), accessToken, refreshToken);
+    tokenService.saveTokenInfo(securityUserInfo.email(), refreshToken);
     return new GeneratedToken(accessToken, refreshToken);
   }
 
   public String refreshAccessToken(String accessToken) {
-    RefreshToken tokenInfo = tokenService.findTokenInfo(accessToken);
+    String userId = getUid(accessToken);
+    RefreshToken tokenInfo = tokenService.findTokenInfo(userId);
     String refreshToken = tokenInfo.getRefreshToken();
     JwtResultType jwtResultType = verifyToken(refreshToken);
     if (jwtResultType.equals(JwtResultType.VALID_JWT)) {
-      String userId = getUid(refreshToken);
+      userId = getUid(refreshToken);
       String authorities = getRole(refreshToken);
-      String newAccessToken = createToken(userId, authorities, ACCESS_TOKEN_EXPIRED);
-      tokenInfo.updateAccessToken(newAccessToken);
-      tokenService.saveTokenInfo(tokenInfo);
-      return newAccessToken;
+      return createToken(userId, authorities, ACCESS_TOKEN_EXPIRED);
     } else {
       throw new ExpiredRefreshTokenException();
     }
@@ -88,9 +77,13 @@ public class JwtProvider {
   }
 
   public String getUid(String token) {
-    return getJwtParser().parseClaimsJws(token)
-                         .getBody()
-                         .getSubject();
+    try {
+      return getJwtParser().parseClaimsJws(token)
+                           .getBody()
+                           .getSubject();
+    } catch (ExpiredJwtException e) {
+      return e.getClaims().getSubject();
+    }
   }
 
   public String getRole(String token) {

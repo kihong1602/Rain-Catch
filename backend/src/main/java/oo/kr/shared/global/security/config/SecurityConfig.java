@@ -75,7 +75,6 @@ public class SecurityConfig {
     configuration.setMaxAge(3600L);
     // Authorization header Read 권한 추가
     configuration.addExposedHeader(HttpHeaders.AUTHORIZATION);
-    configuration.applyPermitDefaultValues();
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
@@ -84,12 +83,15 @@ public class SecurityConfig {
 
   private void configureAuthorizeRequestMatcher(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(requestRegistry -> requestRegistry
-        .requestMatchers(PathRequest.toStaticResources()
-                                    .atCommonLocations())
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
         .permitAll()
         .requestMatchers("/api/accounts/**")
         .permitAll()
         .requestMatchers(HttpMethod.GET, "/api/rentals/umbrellas/**")
+        .permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/stations/near")
+        .permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/stations/**")
         .permitAll()
         .anyRequest()
         .authenticated());
