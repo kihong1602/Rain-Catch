@@ -24,11 +24,6 @@ public class RefreshTokenService {
 
   @Transactional
   public void removeRefreshToken(String email) {
-    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findById(email);
-    if (optionalRefreshToken.isEmpty()) {
-      return;
-    }
-    RefreshToken refreshToken = optionalRefreshToken.get();
-    refreshTokenRepository.delete(refreshToken);
+    refreshTokenRepository.findById(email).ifPresent(refreshTokenRepository::delete);
   }
 }

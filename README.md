@@ -79,7 +79,7 @@ RainCatch
 - build 작업은 pull-request, push 이벤트 시 반복 사용되고, deploy 작업은 frontend, backend push 작업에 반복 사용
 - 중복 코드를 줄이고 재사용성을 높이기위해 GithubActions의 Reusable Workflow로 build, deploy 작업 분리
 
-### JWT기반 인증구조 구현[[구현코드](https://github.com/kihong1602/Rain-Catch/blob/f9a2534c02407f0db29d9d35686998b9c00938d4/backend/src/main/java/oo/kr/shared/global/security/filter/JwtAuthenticationFilter.java#L25-L72) / [구성패키지](https://github.com/kihong1602/Rain-Catch/tree/main/backend/src/main/java/oo/kr/shared/global/security/jwt)]
+### JWT기반 인증구조 구현[[구현코드](https://github.com/kihong1602/Rain-Catch/blob/d357ecfcaa5f09e179eca118d708aa42b9761d57/backend/src/main/java/oo/kr/shared/global/security/filter/JwtAuthenticationFilter.java#L27-L95) / [구성패키지](https://github.com/kihong1602/Rain-Catch/tree/main/backend/src/main/java/oo/kr/shared/global/security/jwt)]
 - 세션기반 인증구조는 트래픽이 커질수록 서버 부하가 증가
 - 토큰기반 인증구조를 도입해 인가 요청에 대한 서버 부하 감소
 - 토큰 탈취를 대비해 AccessToken 만료시간을 짧게 설정
