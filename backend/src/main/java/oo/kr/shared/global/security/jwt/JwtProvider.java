@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class JwtProvider {
 
   private final long REFRESH_TOKEN_EXPIRED = 1000L * 60 * 60 * 24 * 7; // Refresh Token 유효시간 7일
-  private final long ACCESS_TOKEN_EXPIRED = 1000L * 60; // Access Token 유효시간 30분
+  private final long ACCESS_TOKEN_EXPIRED = 1000L * 60 * 30; // Access Token 유효시간 30분
   private final String AUTHORITIES_KEY = "role";
   private final RefreshTokenService tokenService;
   @Value("${jwt.secret}")
